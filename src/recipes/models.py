@@ -7,6 +7,7 @@ class Recipe(models.Model):
     ingredients = models.TextField(help_text="List ingredients seperated by commas")
     cooking_time = models.PositiveIntegerField(help_text="Cooking time in minutes")
     difficulty = models.CharField(max_length=20, blank=True, null=True)
+    pic = models.ImageField(upload_to='recipes', default='no_picture.jpg')
 
     def __str__(self):
         return self.name
