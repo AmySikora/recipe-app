@@ -1,67 +1,23 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Recipes List</title>
-    <style>
-        body {
-            text-align: center;
-            font-family: Arial, sans-serif;
-            background-color: #f8f8f8;
-            margin: 0;
-            padding: 20px;
-        }
-        h1 {
-            font-size: 28px;
-            color: #333;
-        }
-        .recipe-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 20px;
-            padding: 20px;
-        }
-        .recipe-card {
-            background: white;
-            padding: 15px;
-            width: 250px;
-            border-radius: 8px;
-            box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-        .recipe-card img {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
-            border-radius: 5px;
-        }
-        .recipe-card a {
-            display: block;
-            text-decoration: none;
-            font-weight: bold;
-            color: #ff9800;
-            margin-top: 10px;
-        }
-        .recipe-card a:hover {
-            color: #e68900;
-        }
-    </style>
-</head>
-<body>
-    <h1>All Recipes</h1>
-    <div class="recipe-container">
-        {% for recipe in object_list %}
-        <div class="recipe-card">
-            {% if recipe.pic %}
-                <img src="{{ recipe.pic.url }}" alt="{{ recipe.name }}">
-            {% else %}
-                <img src="{% static 'recipes/images/default.jpg' %}" alt="No image available">
-            {% endif %}
-            <h3>{{ recipe.name }}</h3>
-            <a href="{% url 'recipes:recipe_detail' recipe.pk %}">View Details</a>
-        </div>
-        {% endfor %}
+{% extends 'recipes/base.html' %}
+
+{% block title %}Recipes List{% endblock %}
+
+{% block content %}
+<h1>All Recipes</h1>
+
+<div class="recipe-container">
+    {% for recipe in object_list %}
+    <div class="recipe-card">
+        {% if recipe.pic %}
+            <img src="{{ recipe.pic.url }}" alt="{{ recipe.name }}">
+        {% else %}
+            <img src="{% static 'recipes/images/default.jpg' %}" alt="No image available">
+        {% endif %}
+        <h3>{{ recipe.name }}</h3>
+        <a href="{% url 'recipes:recipe_detail' recipe.pk %}" class="btn">View Details</a>
     </div>
-</body>
-</html>
+    {% empty %}
+        <p>No recipes available.</p>
+    {% endfor %}
+</div>
+{% endblock %}
