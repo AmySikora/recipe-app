@@ -1,21 +1,26 @@
-<h2>Details: {{ object.name }}</h2>
+<h2 style="text-align: center;">{{ object.name }}</h2>
 
-<b>Title: </b> {{ object.name }}  <br>
+<b>Description:</b> {{ object.description }} <br>
 
-<b>Description: </b> {{ object.description }} <br>
+<b>Ingredients:</b>
+<ul>
+    {% for ingredient in object.ingredients.split(",") %}
+        <li>{{ ingredient|trim }}</li>
+    {% endfor %}
+</ul>
 
-<b>Ingredients: </b> {{ object.ingredients }} <br>
+<b>Cooking Time:</b> {{ object.cooking_time }} minutes <br>
+<b>Difficulty:</b> {{ object.difficulty }} <br>
 
-<b>Cooking Time: </b> {{ object.cooking_time }} minutes <br>
-
-<b>Difficulty: </b> {{ object.difficulty }} <br>
-
-<b>Instructions:</b> 
-<p>{{ object.instructions }}</p>
-
+<b>Instructions:</b>
+<ol>
+    {% for step in object.instructions.split(". ") %}
+        <li>{{ step|trim }}</li>
+    {% endfor %}
+</ol>
 
 {% if object.pic %}
-    <img src="{{ object.pic.url }}" alt="{{ object.name }}" width="350" height="300" />
+    <img src="{{ object.pic.url }}" alt="{{ object.name }}" width="350" height="300" style="display: block; margin: auto;">
 {% else %}
     <p>No image available.</p>
 {% endif %}
