@@ -10,6 +10,10 @@
 
 <b>Difficulty: </b> {{ object.difficulty }} <br>
 
+<b>Instructions:</b> 
+<p>{{ object.instructions }}</p>
+
+
 {% if object.pic %}
     <img src="{{ object.pic.url }}" alt="{{ object.name }}" width="350" height="300" />
 {% else %}
