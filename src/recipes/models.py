@@ -1,5 +1,6 @@
 from django.db import models
 from django.shortcuts import reverse
+from django.urls import reverse
 
 # Create your models here.
 class Recipe(models.Model):
@@ -28,4 +29,4 @@ class Recipe(models.Model):
         return str(self.name)
     
     def get_absolute_url(self):
-       return reverse ('recipes:detail', kwargs={'pk': self.pk})
+        return reverse('recipes:recipe_detail', kwargs={'pk': self.pk})

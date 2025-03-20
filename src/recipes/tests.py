@@ -1,14 +1,15 @@
+from django.urls import reverse
 from django.test import TestCase
 from recipes.models import Recipe
 
 # Create your tests here.
 class RecipeModelTest(TestCase):
     def setUp(self):
-        Recipe.objects.create(
+        self.recipe = Recipe.objects.create(
             name="Chocolate Cake",
             cooking_time=60,
             ingredients="flour, sugar, milk, cocoa powder, eggs, baking powder",
-            description="A wonderful choclate cake recipe."
+            description="A wonderful chocolate cake recipe."
         )
 
     def test_recipe_name(self):
@@ -20,7 +21,5 @@ class RecipeModelTest(TestCase):
         self.assertEqual(recipe.cooking_time, 60)
 
     def test_get_absolute_url(self):
-       recipe = Recipe.objects.get(id=1)
-       #get_absolute_url() should take you to the detail page of recipe #1
-       #and load the URL /recipes/list/1
-       self.assertEqual(recipe.get_absolute_url(), '/recipes/list/1')
+        expected_url = reverse('recipes:recipe_detail', kwargs={'pk': self.recipe.pk})
+        self.assertEqual(self.recipe.get_absolute_url(), expected_url)
