@@ -1,13 +1,46 @@
 {% load static %}
-
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Recipe's Home</title>
-    </head>
-    <body>
-        <h1 style="text-align:center">Welcome to the Recipe App!</h1>
-        <br>
-        <img src="{% static 'recipes/images/recipes.avif' %}" alt="home" width="600" height="300" style="display: block; margin: auto;">
-    </body>    
+<html lang="en">
+<head>
+    <title>Welcome to the Recipe App</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background-color: #f8f8f8;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            font-size: 28px;
+            color: #333;
+        }
+        img {
+            width: 80%;
+            max-width: 600px;
+            border-radius: 10px;
+            margin: 20px auto;
+            display: block;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            font-size: 18px;
+            background-color: #ff9800;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .btn:hover {
+            background-color: #e68900;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to the Recipe App!</h1>
+    <img src="{% static 'recipes/images/recipes.avif' %}" alt="home">
+    <br>
+    <a href="{% url 'recipes:recipe_list' %}" class="btn">View Recipes</a>
+</body>
 </html>
