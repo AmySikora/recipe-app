@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView   #to display lists
 from .models import Recipe        
+
 # Create your views here.
 class RecipeListView(ListView):           #class-based view
    model = Recipe                         #specify model
