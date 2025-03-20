@@ -1,13 +1,17 @@
-<h2>Details: {{object.name}}</h2>
+<h2>Details: {{ object.name }}</h2>
 
-<b>Title: </b> {{object.name}}  <br>
+<b>Title: </b> {{ object.name }}  <br>
 
-<b>Description: </b> {{object.description}} <br>
+<b>Description: </b> {{ object.description }} <br>
 
-<b>Ingredients: </b> {{object.ingredients}} <br>
+<b>Ingredients: </b> {{ object.ingredients }} <br>
 
-<b>Cooking Time: </b> {{object.cooking_time}} <br>
+<b>Cooking Time: </b> {{ object.cooking_time }} minutes <br>
 
-<b>Difficulty: </b> {{object.difficulty}} <br>
+<b>Difficulty: </b> {{ object.difficulty }} <br>
 
-<img src="{{object.pic.url}}" width="200" height="300" />
+{% if object.pic %}
+    <img src="{{ object.pic.url }}" alt="{{ object.name }}" width="200" height="300" />
+{% else %}
+    <p>No image available.</p>
+{% endif %}
