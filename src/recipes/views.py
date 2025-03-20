@@ -9,6 +9,7 @@ class RecipeListView(ListView):           #class-based view
    
 class RecipeDetailView(DetailView):
     model = Recipetemplate_name = 'recipes/detail.html'
+    template_name = 'recipes/detail.html'
 
 def home(request):
     return render(request, 'recipes/recipes_home.html')
