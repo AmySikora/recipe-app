@@ -1,113 +1,36 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>{{ object.name }} - Recipe Details</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f8f8;
-            text-align: center;
-            margin: 0;
-            padding: 20px;
-        }
-        
-        .container {
-            max-width: 700px;
-            margin: auto;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.1);
-            text-align: left;
-        }
+{% extends 'recipes/base.html' %}
 
-        h2 {
-            text-align: center;
-            font-size: 28px;
-            color: #ff9800;
-        }
+{% block title %}{{ object.name }} - Recipe Details{% endblock %}
 
-        .image-container {
-            text-align: center;
-            margin-bottom: 20px;
-        }
+{% block content %}
+<div class="container">
+    <h2>{{ object.name }}</h2>
 
-        img {
-            width: 100%;
-            max-width: 500px;
-            border-radius: 8px;
-            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .info {
-            font-size: 18px;
-            margin-bottom: 10px;
-            color: #333;
-        }
-
-        .section {
-            background: #fff3e0;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 10px;
-        }
-
-        .instructions {
-            background: #e0f7fa;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 10px;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 12px 20px;
-            font-size: 18px;
-            background-color: #ff9800;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            margin-top: 20px;
-        }
-
-        .btn:hover {
-            background-color: #e68900;
-        }
-    </style>
-</head>
-<body>
-
-    <div class="container">
-        <h2>{{ object.name }}</h2>
-
-        <div class="image-container">
-            {% if object.pic %}
-                <img src="{{ object.pic.url }}" alt="{{ object.name }}">
-            {% else %}
-                <p>No image available.</p>
-            {% endif %}
-        </div>
-
-        <p class="info"><b>Description:</b> {{ object.description }}</p>
-
-        <div class="section">
-            <b>Ingredients:</b>
-            <p style="white-space: pre-line;">{{ object.ingredients }}</p>
-        </div>
-
-        <p class="info"><b>Cooking Time:</b> {{ object.cooking_time }} minutes</p>
-        <p class="info"><b>Difficulty:</b> {{ object.difficulty }}</p>
-
-        <div class="instructions">
-            <b>Instructions:</b>
-            <p style="white-space: pre-line;">{{ object.instructions }}</p>
-        </div>
-
-        <div style="text-align: center;">
-            <a href="{% url 'recipes:recipe_list' %}" class="btn">Back to Recipes</a>
-        </div>
+    <div class="image-container">
+        {% if object.pic %}
+            <img src="{{ object.pic.url }}" alt="{{ object.name }}">
+        {% else %}
+            <p>No image available.</p>
+        {% endif %}
     </div>
 
-</body>
-</html>
+    <p class="info"><b>Description:</b> {{ object.description }}</p>
+
+    <div class="section">
+        <b>Ingredients:</b>
+        <p style="white-space: pre-line;">{{ object.ingredients }}</p>
+    </div>
+
+    <p class="info"><b>Cooking Time:</b> {{ object.cooking_time }} minutes</p>
+    <p class="info"><b>Difficulty:</b> {{ object.difficulty }}</p>
+
+    <div class="instructions">
+        <b>Instructions:</b>
+        <p style="white-space: pre-line;">{{ object.instructions }}</p>
+    </div>
+
+    <div style="text-align: center;">
+        <a href="{% url 'recipes:recipe_list' %}" class="btn">Back to Recipes</a>
+    </div>
+</div>
+{% endblock %}
