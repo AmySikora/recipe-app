@@ -1,18 +1,95 @@
-<h1>Login</h1>          {% comment %} print heading {% endcomment %}
+{% extends 'recipes/base.html' %}
 
-{% comment %} check for error message {% endcomment %}
-{% if error_message %}
-   {{error_message}}
-{% endif %}
+{% block title %}Login{% endblock %}
 
-{% comment %} print form {% endcomment %}
-<form action="" method="POST" >
-   {% comment %} add Django security token {% endcomment %}
-   {% csrf_token %}   
+{% block content %}
+<style>
+    .login-container {
+        max-width: 400px;
+        margin: auto;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        margin-top: 50px;
+    }
 
-   {% comment %} print form received from view  {% endcomment %}
-   {{form}}           
+    h1 {
+        font-size: 26px;
+        color: #ff9800;
+        margin-bottom: 15px;
+    }
 
-   {% comment %} add button {% endcomment %}
-   <button type="submit" >Login</button>
-</form>
+    .error-message {
+        color: red;
+        font-size: 14px;
+        margin-bottom: 10px;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    input {
+        width: 90%;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        font-size: 16px;
+    }
+
+    .btn {
+        padding: 12px;
+        font-size: 16px;
+        font-weight: bold;
+        background-color: #ff9800;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .btn:hover {
+        background-color: #e68900;
+        transform: scale(1.05);
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .register-link {
+        margin-top: 15px;
+        font-size: 14px;
+    }
+
+    .register-link a {
+        color: #ff9800;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .register-link a:hover {
+        text-decoration: underline;
+    }
+</style>
+
+<div class="login-container">
+    <h1>Login</h1>  
+
+    {% if error_message %}
+        <p class="error-message">{{ error_message }}</p>
+    {% endif %}
+
+    <form action="" method="POST">
+        {% csrf_token %}   
+        {{ form.as_p }}  {# This renders form fields with <p> tags for spacing #}
+
+        <button type="submit" class="btn">Login</button>
+    </form>
+
+    <p class="register-link">Don't have an account? <a href="{% url 'register' %}">Sign Up</a></p>
+</div>
+
+{% endblock %}
