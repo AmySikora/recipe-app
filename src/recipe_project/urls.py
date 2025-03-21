@@ -22,9 +22,9 @@ from recipes.views import login_view, logout_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('recipes.urls')), 
-    path('login/', login_view, name='login'),  
-    path('logout/', logout_view, name='logout'),  
+    path('', include('recipes.urls')),  # Recipes app URLs
+    path('login/', login_view, name='login'),
+    path('logout/', logout_view, name='logout'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
