@@ -27,7 +27,7 @@ def login_view(request):
             user = authenticate(username=username, password=password)    
             if user is not None:                 # if user is authenticated
                 login(request, user)             # then use pre-defined Django function to login
-                return redirect('sales:records') # and send the user to desired page
+                return redirect('recipes:records') # and send the user to desired page
         else:                                    # in case of error
             error_message = 'ooops.. something went wrong'  # print error message
 

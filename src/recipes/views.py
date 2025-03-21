@@ -15,3 +15,8 @@ class RecipeDetailView(DetailView):
 # Home View
 def home(request):
     return render(request, 'recipes/recipes_home.html')
+
+#define function-based view - records(records()
+def records(request):
+   #do nothing, simply display page    
+   return render(request, 'recipes/records.html')
