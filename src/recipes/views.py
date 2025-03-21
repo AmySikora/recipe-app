@@ -3,6 +3,8 @@ from django.views.generic import ListView, DetailView
 from .models import Recipe  # Ensure Recipe is correctly imported
 #to protect class-based view
 from django.contrib.auth.mixins import LoginRequiredMixin
+#to protect function-based views
+from django.contrib.auth.decorators import login_required
 
 # List View for Recipes
 class RecipeListView(LoginRequiredMixin, ListView):
@@ -20,7 +22,9 @@ class RecipeDetailView(LoginRequiredMixin, DetailView):
 def home(request):
     return render(request, 'recipes/recipes_home.html')
 
-#define function-based view - records(records()
+#define function-based view - records(request)
+#keep protected
+@login_required
 def records(request):
    #do nothing, simply display page    
    return render(request, 'recipes/records.html')
