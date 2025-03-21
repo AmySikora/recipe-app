@@ -4,6 +4,7 @@
 <head>
     <title>Welcome to the Recipe App</title>
     <style>
+        /* General Styles */
         body {
             text-align: center;
             font-family: Arial, sans-serif;
@@ -11,12 +12,13 @@
             margin: 0;
             padding: 0;
         }
-
+        
         /* Navbar Styles */
         .navbar {
             background-color: #ff9800;
             overflow: hidden;
             padding: 10px 0;
+            text-align: center;
         }
 
         .navbar a {
@@ -27,27 +29,17 @@
             display: inline-block;
         }
 
+        .navbar a.disabled {
+            pointer-events: none;  /* Disable links until login */
+            opacity: 0.5;
+        }
+
         .navbar a:hover {
             background-color: #e68900;
             border-radius: 5px;
         }
 
-        /* Auth Links */
-        .auth-info {
-            margin: 10px;
-            font-size: 16px;
-        }
-
-        .auth-info a {
-            color: #ff9800;
-            text-decoration: none;
-            margin-left: 10px;
-        }
-
-        .auth-info a:hover {
-            text-decoration: underline;
-        }
-
+        /* Page Content */
         h1 {
             font-size: 28px;
             color: #333;
@@ -80,29 +72,25 @@
 </head>
 <body>
 
-    <!-- Optional Welcome and Auth Links -->
-    <div class="auth-info">
-        {% if user.is_authenticated %}
-            Welcome, {{ user.username }}!
-            <a href="{% url 'logout' %}">Logout</a>
-        {% else %}
-            <a href="{% url 'login' %}">Login</a>
-        {% endif %}
-    </div>
-
     <!-- Navigation Bar -->
     <div class="navbar">
         <a href="{% url 'recipes:home' %}">Home</a>
-        <a href="{% url 'recipes:recipe_list' %}">Recipes</a>
-        <a href="#">About</a>
-        <a href="#">Contact</a>
+        <a href="{% url 'recipes:recipe_list' %}" {% if not user.is_authenticated %}class="disabled"{% endif %}>Recipes</a>
+        <a href="#" {% if not user.is_authenticated %}class="disabled"{% endif %}>About</a>
+        <a href="#" {% if not user.is_authenticated %}class="disabled"{% endif %}>Contact</a>
     </div>
 
     <h1>Welcome to the Recipe App!</h1>
-
+    
     <img src="{% static 'recipes/images/recipes.avif' %}" alt="home">
 
-    <a href="{% url 'recipes:recipe_list' %}" class="btn">View Recipes</a>
-
+    <br>
+    <!-- Show "Login" if user is NOT logged in, otherwise show "View Recipes" -->
+    {% if user.is_authenticated %}
+        <a href="{% url 'recipes:recipe_list' %}" class="btn">View Recipes</a>
+    {% else %}
+        <a href="{% url 'login' %}" class="btn">Login</a>
+    {% endif %}
+    
 </body>
 </html>
