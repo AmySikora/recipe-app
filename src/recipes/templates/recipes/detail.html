@@ -104,21 +104,16 @@
             {% endfor %}
         </ul>
     </div>
-
-    <p class="info"><b>Cooking Time:</b> {{ object.cooking_time }} minutes</p>
-    <p class="info"><b>Difficulty:</b> {{ object.difficulty }}</p>
-
+    
     <div class="instructions">
         <b>Instructions:</b>
         <ol>
             {% for step in instructions_list %}
-                {% if step %}
-                    <li>{{ step }}</li>
-                {% endif %}
+                <li>{{ step }}</li>
             {% endfor %}
         </ol>
     </div>
-
+    
     <div style="text-align: center;">
         <a href="{% url 'recipes:recipe_list' %}" class="btn">Back to Recipes</a>
     </div>

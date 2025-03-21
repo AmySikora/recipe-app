@@ -16,7 +16,14 @@ class RecipeListView(LoginRequiredMixin, ListView):
 class RecipeDetailView(LoginRequiredMixin, DetailView):
     model = Recipe  
     template_name = 'recipes/detail.html'
-    login_url = '/login/'  # Redirect to login if not authenticated
+    login_url = '/login/'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['ingredients_list'] = self.object.ingredients.split(", ")
+        context['instructions_list'] = self.object.instructions.split("\n")
+        return context
+
 
 # Home View (Public)
 def home(request):
