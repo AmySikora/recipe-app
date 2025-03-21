@@ -1,0 +1,57 @@
+{% extends 'recipes/base.html' %}
+
+{% block title %}Logged Out{% endblock %}
+
+{% block content %}
+<style>
+    .success-container {
+        max-width: 500px;
+        margin: auto;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        margin-top: 50px;
+    }
+
+    h1 {
+        font-size: 28px;
+        color: #ff9800;
+        margin-bottom: 15px;
+    }
+
+    p {
+        font-size: 18px;
+        color: #333;
+        margin-bottom: 15px;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 12px 20px;
+        font-size: 18px;
+        background-color: #ff9800;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        margin-top: 20px;
+    }
+
+    .btn:hover {
+        background-color: #e68900;
+        transform: scale(1.05);
+    }
+</style>
+
+<div class="success-container">
+    <h1>You've been logged out.</h1>
+    <p>We hope to see you again soon on the Recipe app!.</p>
+    
+    <a href="{% url 'login' %}" class="btn">Log Back In</a>
+    <br>
+    <br>
+    <a href="{% url 'recipes:home' %}" class="btn">Return to Homepage</a>
+</div>
+
+{% endblock %}
