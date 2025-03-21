@@ -38,15 +38,24 @@
         .content {
             padding: 20px;
         }
+
+        .auth-links {
+            margin-top: 15px;
+        }
     </style>
 </head>
 <body>
-        <br>
-        <br>
-        <a href ="{%url 'login' %}">  Login  </a>
-        <br>
-        <br>
-        <br>
+
+    <!-- Auth Links -->
+    <div class="auth-links">
+        {% if user.is_authenticated %}
+            <p>Welcome, {{ user.username }}!</p>
+            <a href="{% url 'logout' %}">Logout</a>
+        {% else %}
+            <a href="{% url 'login' %}">Login</a>
+        {% endif %}
+    </div>
+
     <!-- Navbar -->
     <div class="navbar">
         <a href="{% url 'recipes:home' %}">Home</a>
