@@ -1,3 +1,74 @@
-<h1> Search for recipess records </h1>
+{% extends 'recipes/base.html' %}
 
-<hr> 
+{% block title %}Search Recipe Records{% endblock %}
+
+{% block content %}
+<style>
+    .container {
+        max-width: 700px;
+        margin: auto;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+    h1 {
+        font-size: 26px;
+        color: #ff9800;
+        margin-bottom: 15px;
+    }
+
+    .search-box {
+        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    input[type="text"] {
+        width: 60%;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        font-size: 16px;
+    }
+
+    .btn {
+        padding: 10px 15px;
+        font-size: 16px;
+        font-weight: bold;
+        background-color: #ff9800;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .btn:hover {
+        background-color: #e68900;
+        transform: scale(1.05);
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    hr {
+        margin: 20px 0;
+        border: 0;
+        border-top: 1px solid #ddd;
+    }
+</style>
+
+<div class="container">
+    <h1>Search for Recipe Records</h1>
+    <hr>
+
+    <div class="search-box">
+        <input type="text" placeholder="Search recipes...">
+        <button class="btn">Search</button>
+    </div>
+</div>
+
+{% endblock %}
