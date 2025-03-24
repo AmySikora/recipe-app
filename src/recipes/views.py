@@ -64,3 +64,7 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return render(request, 'auth/success.html')
+
+def records(request):
+   #do nothing, simply display page    
+   return render(request, 'recipes/records.html')
