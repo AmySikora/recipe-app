@@ -48,8 +48,9 @@ def records(request):
             if qs:      #if data found
            #convert the queryset values to pandas dataframe
               recipes_df=pd.DataFrame(qs.values())
+              recipes_df['recipe_id']=recipes_df['recipe_id'].apply(get_recipename_from_id)
               recipes_df=recipes_df.to_html()
-              
+
             print("Search Query:", recipe_title, "| Chart Type:", chart_type)
 
             print ('Exploring querysets:')
@@ -71,6 +72,11 @@ def records(request):
             obj = Recipe.objects.get(id=1)
             print (obj)
 
+        '''
+       The following block is to get introduced to querysets
+       #examples hidden to improve readability
+       '''
+     #pack up data to be sent to template in the context dictionary
     context = {
         'form': form,
         'recipe_title': recipe_title,
