@@ -1,11 +1,13 @@
-from django import forms    #import django forms
+from django import forms  # Import Django forms
 
-CHART__CHOICES = (          #specify choices as a tuple
-   ('#1', 'Bar chart'),    # when user selects "Bar chart", it is stored as "#1"
-   ('#2', 'Pie chart'),
-   ('#3', 'Line chart')
-   )
-#define class-based Form imported from Django forms
+# Define chart choices as a tuple of tuples
+CHART_CHOICES = (
+    ('#1', 'Bar chart'),
+    ('#2', 'Pie chart'),
+    ('#3', 'Line chart')
+)
+
+# Define class-based Form
 class RecipeSearchForm(forms.Form): 
-   recipe_title= forms.CharField(max_length=120)
-   chart_type = forms.ChoiceField(choices=CHART__CHOICES)
+    recipe_title = forms.CharField(max_length=120, label="Recipe Title")
+    chart_type = forms.ChoiceField(choices=CHART_CHOICES, label="Chart Type")
