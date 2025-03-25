@@ -52,4 +52,12 @@
         <input type="text" name="search" placeholder="Search recipes...">
         <button type="submit">Search</button>
     </form>
+
+    <br>
+
+{% if sales_df %}
+   {{sales_df}} 
+{% else %}
+   <h3> no data</h3>
+{% endif %}
 </div>

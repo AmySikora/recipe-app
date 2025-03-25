@@ -7,6 +7,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm  
 from .forms import RecipeSearchForm  # Make sure this exists
 from .models import Recipe
+import pandas as pd
 
 # List View for Recipes (Protected)
 class RecipeListView(LoginRequiredMixin, ListView):
@@ -35,11 +36,18 @@ def home(request):
 def records(request):
     form = RecipeSearchForm(request.POST or None)
     recipe_title = chart_type = None
+    recipes_df=None
 
     if request.method == 'POST':
         if form.is_valid():
             recipe_title = form.cleaned_data.get('recipe_title')
             chart_type = form.cleaned_data.get('chart_type')
+
+            #apply filter to extract data
+            qs =Recipe.objects.filter(recipe__name=recipe_title)
+            if qs:      #if data found
+           #convert the queryset values to pandas dataframe
+              recipes_df=pd.DataFrame(qs.values())
             print("Search Query:", recipe_title, "| Chart Type:", chart_type)
 
             print ('Exploring querysets:')
@@ -65,6 +73,7 @@ def records(request):
         'form': form,
         'recipe_title': recipe_title,
         'chart_type': chart_type,
+        'recipes_df': recipes_df,
     }
     return render(request, 'recipes/records.html', context)
 
