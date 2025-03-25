@@ -5,13 +5,13 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm  
-from .forms import RecipeSearchForm
+from .forms import RecipeSearchForm  # Make sure this exists
 
 # List View for Recipes (Protected)
 class RecipeListView(LoginRequiredMixin, ListView):
     model = Recipe
     template_name = 'recipes/recipes_list.html'
-    login_url = '/login/'  # Redirect to login if not authenticated
+    login_url = '/login/'
 
 # Detail View for a Single Recipe (Protected)
 class RecipeDetailView(LoginRequiredMixin, DetailView):
@@ -25,60 +25,47 @@ class RecipeDetailView(LoginRequiredMixin, DetailView):
         context['instructions_list'] = self.object.instructions.split("\n")
         return context
 
-
 # Home View (Public)
 def home(request):
     return render(request, 'recipes/recipes_home.html')
 
-def records(request):
-   #do nothing, simply display page    
-   return render(request, 'recipes/records.html')
-
-#define function-based view - records()
-def records(request):
-   #create an instance of SalesSearchForm that you defined in sales/forms.py
-   form = RecipeSearchForm(request.POST or None)
-
-   #check if the button is clicked
-   if request.method =='POST':
-       #read recipe_title and chart_type
-       recipe_title = request.POST.get('recipe_title')
-       chart_type = request.POST.get('chart_type')
-       #display in terminal - needed for debugging during development only
-       print (recipe_title, chart_type)
-
-   #pack up data to be sent to template in the context dictionary
-   context={
-           'form': form,
-   }
-
-   #load the sales/record.html page using the data that you just prepared
-   return render(request, 'recipes/records.html', context)
-
-# Protected Page (Requires Login)
+# Records View with Form Logic (Protected)
 @login_required(login_url='/login/')
 def records(request):
-    return render(request, 'recipes/records.html')
+    form = RecipeSearchForm(request.POST or None)
+    recipe_title = chart_type = None
+
+    if request.method == 'POST':
+        if form.is_valid():
+            recipe_title = form.cleaned_data.get('recipe_title')
+            chart_type = form.cleaned_data.get('chart_type')
+            print("Search Query:", recipe_title, "| Chart Type:", chart_type)
+
+    context = {
+        'form': form,
+        'recipe_title': recipe_title,
+        'chart_type': chart_type,
+    }
+    return render(request, 'recipes/records.html', context)
 
 # Login View
 def login_view(request):
     if request.user.is_authenticated:
-        return redirect('recipes:recipe_list')  # Redirect to recipes list if already logged in
+        return redirect('recipes:recipe_list')
 
     error_message = None
-    form = AuthenticationForm()  # Create form object
+    form = AuthenticationForm()
 
     if request.method == 'POST':
         form = AuthenticationForm(data=request.POST)
-
         if form.is_valid():
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
-            user = authenticate(username=username, password=password)
-
-            if user is not None:
+            user = authenticate(
+                username=form.cleaned_data.get('username'),
+                password=form.cleaned_data.get('password')
+            )
+            if user:
                 login(request, user)
-                return redirect('recipes:recipe_list')  # Redirect to recipes list
+                return redirect('recipes:recipe_list')
             else:
                 error_message = "Invalid username or password."
         else:
