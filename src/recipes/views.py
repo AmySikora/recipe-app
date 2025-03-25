@@ -7,14 +7,15 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import RecipeSearchForm
 import pandas as pd
+from .utils import get_recipename_from_id, get_chart
 
-#  List View for Recipes (Protected)
+# List View for Recipes (Protected)
 class RecipeListView(LoginRequiredMixin, ListView):
     model = Recipe
     template_name = 'recipes/recipes_list.html'
     login_url = '/login/'
 
-#  Detail View for Single Recipe (Protected)
+# Detail View for a Single Recipe (Protected)
 class RecipeDetailView(LoginRequiredMixin, DetailView):
     model = Recipe
     template_name = 'recipes/detail.html'
@@ -26,51 +27,41 @@ class RecipeDetailView(LoginRequiredMixin, DetailView):
         context['instructions_list'] = self.object.instructions.split("\n")
         return context
 
-#  Home Page (Public)
+# Home Page (Public)
 def home(request):
     return render(request, 'recipes/recipes_home.html')
 
-#  Records Page with Search and Debug Info (Protected)
+# Records View with Search and Chart (Protected)
 @login_required(login_url='/login/')
 def records(request):
     form = RecipeSearchForm(request.POST or None)
     recipes_df = None
     recipe_title = chart_type = None
+    chart = None
 
     if request.method == 'POST' and form.is_valid():
         recipe_title = form.cleaned_data['recipe_title']
         chart_type = form.cleaned_data['chart_type']
 
-        # Filter recipes by name (case-insensitive)
         qs = Recipe.objects.filter(name__icontains=recipe_title)
 
         if qs.exists():
             recipes_df = pd.DataFrame(qs.values())
+            recipes_df['recipe_id'] = recipes_df['recipe_id'].apply(get_recipename_from_id)
+            chart = get_chart(chart_type, recipes_df, labels=recipes_df['date_created'].values)
             recipes_df = recipes_df.to_html()
-
-        # Debugging Output
-        print("Search Query:", recipe_title, "| Chart Type:", chart_type)
-        print("All Recipes:", Recipe.objects.all())
-        print("Filtered Recipes:", qs)
-        print("Values:", qs.values())
-        print("Values List:", qs.values_list())
-
-        try:
-            obj = Recipe.objects.get(id=1)
-            print("Sample Recipe Object:", obj)
-        except Recipe.DoesNotExist:
-            print("Recipe with id=1 does not exist.")
 
     context = {
         'form': form,
         'recipe_title': recipe_title,
         'chart_type': chart_type,
-        'recipes_df': recipes_df
+        'recipes_df': recipes_df,
+        'chart': chart,
     }
 
     return render(request, 'recipes/records.html', context)
 
-#  Login View
+# Login View
 def login_view(request):
     if request.user.is_authenticated:
         return redirect('recipes:recipe_list')
@@ -98,7 +89,7 @@ def login_view(request):
         'error_message': error_message
     })
 
-#  Logout View
+# Logout View
 def logout_view(request):
     logout(request)
     return render(request, 'auth/success.html')
