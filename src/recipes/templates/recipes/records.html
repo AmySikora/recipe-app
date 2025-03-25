@@ -1,30 +1,38 @@
+{% extends 'recipes/base.html' %}
+
+{% block title %}Search Recipes{% endblock %}
+
+{% block content %}
 <style>
     .container {
-        max-width: 600px;
-        margin: 50px auto;
-        padding: 20px;
+        max-width: 700px;
+        margin: 40px auto;
+        padding: 30px;
         background-color: #fffaf0;
         border-radius: 10px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        text-align: center;
+        box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.1);
         font-family: Arial, sans-serif;
     }
 
     h1 {
+        font-size: 28px;
         color: #ff9800;
-        margin-bottom: 10px;
+        margin-bottom: 20px;
     }
 
     .search-box {
-        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 30px;
     }
 
     .search-box input[type="text"] {
+        flex: 1;
         padding: 10px;
-        width: 70%;
+        font-size: 16px;
         border: 1px solid #ccc;
         border-radius: 5px;
-        font-size: 16px;
     }
 
     .search-box button {
@@ -34,32 +42,48 @@
         border: none;
         border-radius: 5px;
         font-size: 16px;
-        margin-left: 10px;
         cursor: pointer;
     }
 
     .search-box button:hover {
         background-color: #e68900;
     }
+
+    .result-table {
+        margin-top: 20px;
+        overflow-x: auto;
+    }
+
+    .chart {
+        margin-top: 30px;
+        max-width: 100%;
+    }
+
+    .no-data {
+        font-size: 18px;
+        color: #888;
+        margin-top: 20px;
+    }
 </style>
 
 <div class="container">
     <h1>Search for Recipe Records</h1>
-    <hr>
-
+    
     <form action="" method="POST" class="search-box">
         {% csrf_token %}
         <input type="text" name="search" placeholder="Search recipes...">
         <button type="submit">Search</button>
     </form>
 
-    <br>
-
     {% if recipes_df %}
-    {{recipes_df|safe}}
-    <br>
-    <img src="data:image/png;base64, {{chart|safe}}">
- {% else %}
-    <h3> no data</h3>
- {% endif %}
+        <div class="result-table">
+            {{ recipes_df|safe }}
+        </div>
+        <div class="chart">
+            <img src="data:image/png;base64,{{ chart|safe }}" alt="Chart">
+        </div>
+    {% else %}
+        <p class="no-data">No results found. Try searching for another recipe.</p>
+    {% endif %}
 </div>
+{% endblock %}
