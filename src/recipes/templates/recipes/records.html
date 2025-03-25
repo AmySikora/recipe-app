@@ -56,7 +56,7 @@
     <br>
 
 {% if sales_df %}
-   {{sales_df}} 
+{{recipes_df|safe}}
 {% else %}
    <h3> no data</h3>
 {% endif %}

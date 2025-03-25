@@ -48,6 +48,8 @@ def records(request):
             if qs:      #if data found
            #convert the queryset values to pandas dataframe
               recipes_df=pd.DataFrame(qs.values())
+              recipes_df=recipes_df.to_html()
+              
             print("Search Query:", recipe_title, "| Chart Type:", chart_type)
 
             print ('Exploring querysets:')
