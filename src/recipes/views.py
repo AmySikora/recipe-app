@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm  
 from .forms import RecipeSearchForm  # Make sure this exists
+from .models import Recipe
 
 # List View for Recipes (Protected)
 class RecipeListView(LoginRequiredMixin, ListView):
@@ -40,6 +41,25 @@ def records(request):
             recipe_title = form.cleaned_data.get('recipe_title')
             chart_type = form.cleaned_data.get('chart_type')
             print("Search Query:", recipe_title, "| Chart Type:", chart_type)
+
+            print ('Exploring querysets:')
+            print ('Case 1: Output of Recipe.objects.all()')
+            qs=Recipe.objects.all()
+            print (qs)
+
+            print ('Case 2: Output of Recipe.objects.filter(book_name=book_title)')
+            qs =Recipe.objects.filter(recipe__name=recipe_title)
+            print (qs)
+
+            print ('Case 3: Output of qs.values')
+            print (qs.values())
+
+            print ('Case 4: Output of qs.values_list()')
+            print (qs.values_list())
+
+            print ('Case 5: Output of Recipe.objects.get(id=1)')
+            obj = Recipe.objects.get(id=1)
+            print (obj)
 
     context = {
         'form': form,
