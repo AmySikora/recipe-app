@@ -5,6 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm  
+from .forms import RecipeSearchForm
 
 # List View for Recipes (Protected)
 class RecipeListView(LoginRequiredMixin, ListView):
@@ -28,6 +29,31 @@ class RecipeDetailView(LoginRequiredMixin, DetailView):
 # Home View (Public)
 def home(request):
     return render(request, 'recipes/recipes_home.html')
+
+def records(request):
+   #do nothing, simply display page    
+   return render(request, 'recipes/records.html')
+
+#define function-based view - records()
+def records(request):
+   #create an instance of SalesSearchForm that you defined in sales/forms.py
+   form = RecipeSearchForm(request.POST or None)
+
+   #check if the button is clicked
+   if request.method =='POST':
+       #read recipe_title and chart_type
+       recipe_title = request.POST.get('recipe_title')
+       chart_type = request.POST.get('chart_type')
+       #display in terminal - needed for debugging during development only
+       print (recipe_title, chart_type)
+
+   #pack up data to be sent to template in the context dictionary
+   context={
+           'form': form,
+   }
+
+   #load the sales/record.html page using the data that you just prepared
+   return render(request, 'recipes/records.html', context)
 
 # Protected Page (Requires Login)
 @login_required(login_url='/login/')
@@ -64,7 +90,3 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return render(request, 'auth/success.html')
-
-def records(request):
-   #do nothing, simply display page    
-   return render(request, 'recipes/records.html')

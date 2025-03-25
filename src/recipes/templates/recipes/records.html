@@ -1,63 +1,45 @@
-{% extends 'recipes/base.html' %}
-
-{% block title %}Search Recipe Records{% endblock %}
-
-{% block content %}
 <style>
     .container {
-        max-width: 700px;
-        margin: auto;
-        background: white;
+        max-width: 600px;
+        margin: 50px auto;
         padding: 20px;
+        background-color: #fffaf0;
         border-radius: 10px;
-        box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         text-align: center;
+        font-family: Arial, sans-serif;
     }
 
     h1 {
-        font-size: 26px;
         color: #ff9800;
-        margin-bottom: 15px;
+        margin-bottom: 10px;
     }
 
     .search-box {
         margin-top: 20px;
-        display: flex;
-        justify-content: center;
-        gap: 10px;
     }
 
-    input[type="text"] {
-        width: 60%;
+    .search-box input[type="text"] {
         padding: 10px;
-        border-radius: 5px;
+        width: 70%;
         border: 1px solid #ccc;
+        border-radius: 5px;
         font-size: 16px;
     }
 
-    .btn {
-        padding: 10px 15px;
-        font-size: 16px;
-        font-weight: bold;
+    .search-box button {
+        padding: 10px 20px;
         background-color: #ff9800;
         color: white;
-        text-decoration: none;
-        border-radius: 5px;
         border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        margin-left: 10px;
         cursor: pointer;
-        transition: all 0.3s ease-in-out;
     }
 
-    .btn:hover {
+    .search-box button:hover {
         background-color: #e68900;
-        transform: scale(1.05);
-        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-    }
-
-    hr {
-        margin: 20px 0;
-        border: 0;
-        border-top: 1px solid #ddd;
     }
 </style>
 
@@ -65,10 +47,9 @@
     <h1>Search for Recipe Records</h1>
     <hr>
 
-    <div class="search-box">
-        <input type="text" placeholder="Search recipes...">
-        <button class="btn">Search</button>
-    </div>
+    <form action="" method="POST" class="search-box">
+        {% csrf_token %}
+        <input type="text" name="search" placeholder="Search recipes...">
+        <button type="submit">Search</button>
+    </form>
 </div>
-
-{% endblock %}
