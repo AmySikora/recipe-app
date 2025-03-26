@@ -7,7 +7,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import RecipeSearchForm
 import pandas as pd
-from .utils import get_recipename_from_id, get_chart
+from django.urls import reverse
+from .utils import get_chart
 
 # List View for Recipes (Protected)
 class RecipeListView(LoginRequiredMixin, ListView):
@@ -46,10 +47,22 @@ def records(request):
         qs = Recipe.objects.filter(name__icontains=recipe_title)
 
         if qs.exists():
-            recipes_df = pd.DataFrame(qs.values())
-            recipes_df['recipe_id'] = recipes_df['recipe_id'].apply(get_recipename_from_id)
-            chart = get_chart(chart_type, recipes_df, labels=recipes_df['date_created'].values)
-            recipes_df = recipes_df.to_html()
+            # Build DataFrame with custom links to detail pages
+            data = []
+            for recipe in qs:
+                recipe_link = f'<a href="{reverse("recipes:recipe_detail", args=[recipe.id])}">{recipe.name}</a>'
+                data.append({
+                    'Name': recipe_link,
+                    'Ingredients': recipe.ingredients,
+                    'Cooking Time (min)': recipe.cooking_time,
+                    'Difficulty': recipe.difficulty
+                })
+
+            recipes_df = pd.DataFrame(data)
+            chart = get_chart(chart_type, recipes_df, labels=recipes_df['Name'])
+
+            # Convert to HTML with links
+            recipes_df = recipes_df.to_html(escape=False)
 
     context = {
         'form': form,
