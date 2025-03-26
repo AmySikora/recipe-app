@@ -37,49 +37,44 @@ def home(request):
 def records(request):
     form = RecipeSearchForm(request.POST or None)
     recipes_df = None
-    recipe_title = chart_type = None
     chart = None
+    qs = Recipe.objects.none()
 
     if request.method == 'POST' and form.is_valid():
-        if 'show_all' in request.POST:
+        title = form.cleaned_data.get('recipe_title')
+        ingredient = form.cleaned_data.get('recipe_ingredient')
+        chart_type = form.cleaned_data.get('chart_type')
+
+        # Filter recipes based on title, ingredient, or both
+        if title and ingredient:
+            qs = Recipe.objects.filter(name__icontains=title, ingredients__icontains=ingredient)
+        elif title:
+            qs = Recipe.objects.filter(name__icontains=title)
+        elif ingredient:
+            qs = Recipe.objects.filter(ingredients__icontains=ingredient)
+        else:
             qs = Recipe.objects.all()
-        elif form.is_valid():   
-            recipe_title = form.cleaned_data['recipe_title']
-            chart_type = form.cleaned_data['chart_type']
 
-        # Filter recipes based on search (case-insensitive match)
-        qs = Recipe.objects.filter(name__icontains=recipe_title)
-    else:
-        qs = None
-
-        if qs and qs.exists():
-            # Build table data with links
+        if qs.exists():
             data = []
             labels = []
-            
+
             for recipe in qs:
-                recipe_link = f'<a href="{reverse("recipes:recipe_detail", args=[recipe.id])}">{recipe.name}</a>'
+                link = f'<a href="{reverse("recipes:recipe_detail", args=[recipe.id])}">{recipe.name}</a>'
                 data.append({
-                    'Name': recipe_link,
+                    'Name': link,
                     'Ingredients': recipe.ingredients,
                     'Cooking Time (min)': recipe.cooking_time,
                     'Difficulty': recipe.difficulty
                 })
-
-                # Append plain text name for chart label
                 labels.append(recipe.name)
 
-            # Convert to DataFrame and generate chart
             recipes_df = pd.DataFrame(data)
-            chart = get_chart(chart_type, recipes_df, labels=labels) 
-            
-            # Convert table to HTML with clickable links
+            chart = get_chart(chart_type, recipes_df, labels=labels)
             recipes_df = recipes_df.to_html(escape=False)
 
     context = {
         'form': form,
-        'recipe_title': recipe_title,
-        'chart_type': chart_type,
         'recipes_df': recipes_df,
         'chart': chart,
     }
