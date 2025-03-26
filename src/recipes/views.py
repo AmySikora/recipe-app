@@ -6,8 +6,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import RecipeSearchForm
-from django.urls import reverse
 import pandas as pd
+from django.urls import reverse
 from .utils import get_chart
 
 # List View for Recipes (Protected)
@@ -32,41 +32,49 @@ class RecipeDetailView(LoginRequiredMixin, DetailView):
 def home(request):
     return render(request, 'recipes/recipes_home.html')
 
-# Search and Show All View (Protected)
+# Records View with Search and Chart (Protected)
 @login_required(login_url='/login/')
 def records(request):
     form = RecipeSearchForm(request.POST or None)
     recipes_df = None
+    recipe_title = chart_type = None
     chart = None
-    recipe_title = chart_type = ""
 
-    qs = None
-    if request.method == 'POST':
+    if request.method == 'POST' and form.is_valid():
         if 'show_all' in request.POST:
             qs = Recipe.objects.all()
-            chart_type = request.POST.get('chart_type', '')
-        elif form.is_valid():
+        elif form.is_valid():   
             recipe_title = form.cleaned_data['recipe_title']
             chart_type = form.cleaned_data['chart_type']
-            qs = Recipe.objects.filter(name__icontains=recipe_title)
 
-    if qs and qs.exists():
-        data = []
-        labels = []
+        # Filter recipes based on search (case-insensitive match)
+        qs = Recipe.objects.filter(name__icontains=recipe_title)
+    else:
+        qs = None
 
-        for recipe in qs:
-            recipe_link = f'<a href="{reverse("recipes:recipe_detail", args=[recipe.id])}">{recipe.name}</a>'
-            data.append({
-                'Name': recipe_link,
-                'Ingredients': recipe.ingredients,
-                'Cooking Time (min)': recipe.cooking_time,
-                'Difficulty': recipe.difficulty
-            })
-            labels.append(recipe.name)
+        if qs and qs.exists():
+            # Build table data with links
+            data = []
+            labels = []
+            
+            for recipe in qs:
+                recipe_link = f'<a href="{reverse("recipes:recipe_detail", args=[recipe.id])}">{recipe.name}</a>'
+                data.append({
+                    'Name': recipe_link,
+                    'Ingredients': recipe.ingredients,
+                    'Cooking Time (min)': recipe.cooking_time,
+                    'Difficulty': recipe.difficulty
+                })
 
-        recipes_df = pd.DataFrame(data)
-        chart = get_chart(chart_type, recipes_df, labels=labels)
-        recipes_df = recipes_df.to_html(escape=False)
+                # Append plain text name for chart label
+                labels.append(recipe.name)
+
+            # Convert to DataFrame and generate chart
+            recipes_df = pd.DataFrame(data)
+            chart = get_chart(chart_type, recipes_df, labels=labels) 
+            
+            # Convert table to HTML with clickable links
+            recipes_df = recipes_df.to_html(escape=False)
 
     context = {
         'form': form,

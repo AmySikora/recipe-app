@@ -101,12 +101,19 @@
 
     <form method="POST">
         {% csrf_token %}
-        {{ form.as_p }}
-        <div class="button-group">
-            <button type="submit" name="search">Search</button>
-            <button type="submit" name="show_all" style="background-color: #bbb;">Show All Recipes</button>
+        {{ form.recipe_title.label_tag }}
+        {{ form.recipe_title }}
+        
+        {{ form.recipe_ingredient.label_tag }}
+        {{ form.recipe_ingredient }}
+        
+        {{ form.chart_type.label_tag }}
+        {{ form.chart_type }}
+        
+        <div style="text-align: center;">
+          <button type="submit">Search</button>
         </div>
-    </form>
+      </form>      
     
     {% if recipes_df %}
         <h2>Results:</h2>
