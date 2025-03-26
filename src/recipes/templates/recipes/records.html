@@ -111,16 +111,16 @@
         {{ form.chart_type }}
         
         <div style="text-align: center;">
-          <button type="submit">Search</button>
+            <button type="submit">Search</button>
         </div>
-      </form>      
-    
+    </form>
+
     {% if recipes_df %}
         <h2>Results:</h2>
         <div class="result-table">
             {{ recipes_df|safe }}
         </div>
-    
+
         <div class="chart">
             <h2>Chart Visualization:</h2>
             <img src="data:image/png;base64,{{ chart|safe }}" alt="Chart">
