@@ -110,7 +110,9 @@
     
         <div style="text-align: center;">
             <button type="submit">Search</button>
+            <button type="submit" name="show_all" value="1">Show All</button>
         </div>
+        
     </form>    
 
     {% if recipes_df %}
@@ -123,7 +125,7 @@
             <h2>Chart Visualization:</h2>
             <img src="data:image/png;base64,{{ chart|safe }}" alt="Chart">
         </div>
-                
+
     {% else %}
         <p class="no-data">No recipes found. Try another search.</p>
     {% endif %}
