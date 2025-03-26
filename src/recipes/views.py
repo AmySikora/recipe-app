@@ -54,19 +54,21 @@ def records(request):
             
             for recipe in qs:
                 recipe_link = f'<a href="{reverse("recipes:recipe_detail", args=[recipe.id])}">{recipe.name}</a>'
+               
                 data.append({
                     'Name': recipe_link,
                     'Ingredients': recipe.ingredients,
                     'Cooking Time (min)': recipe.cooking_time,
                     'Difficulty': recipe.difficulty
                 })
+
+                # Append plain text name for chart label
                 labels.append(recipe.name)
 
             # Convert to DataFrame and generate chart
             recipes_df = pd.DataFrame(data)
             chart = get_chart(chart_type, recipes_df, labels=labels) 
-
-
+            
             # Convert table to HTML with clickable links
             recipes_df = recipes_df.to_html(escape=False)
 
