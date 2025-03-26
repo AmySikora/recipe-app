@@ -94,6 +94,17 @@
         font-size: 18px;
         color: #888;
     }
+
+    /* Animation */
+    #results-section {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.4s ease;
+    }
+
+    #results-section.show {
+        max-height: 1500px;
+    }
 </style>
 
 <div class="container">
@@ -110,13 +121,11 @@
         <div style="text-align: center;">
             <button type="submit" name="search" value="1">Search</button>
             <button type="button" id="toggleResultsBtn">Show Recipes</button>
-
         </div>
     </form>
 
-    <!-- Results Section (Toggle Display) -->
-    <div id="results-section" {% if recipes_df %}style="display: block;"{% else %}style="display: none;"{% endif %}>
-
+    <!-- Results Section (initially hidden unless searched or toggled) -->
+    <div id="results-section" class="{% if show_results %}show{% endif %}">
         {% if recipes_df %}
             <h2>Results:</h2>
             <div class="result-table">
@@ -140,7 +149,7 @@
     const resultsSection = document.getElementById('results-section');
 
     if (toggleBtn && resultsSection) {
-        let isVisible = false;
+        let isVisible = resultsSection.classList.contains('show');
 
         toggleBtn.addEventListener('click', () => {
             isVisible = !isVisible;
@@ -150,4 +159,3 @@
     }
 </script>
 {% endblock %}
-

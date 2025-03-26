@@ -79,6 +79,7 @@ def records(request):
         'form': form,
         'recipes_df': recipes_df,
         'chart': chart,
+        'show_results': bool(recipes_df),
     }
 
     return render(request, 'recipes/records.html', context)
