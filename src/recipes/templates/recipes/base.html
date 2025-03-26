@@ -5,32 +5,32 @@
 <head>
     <title>{% block title %}Recipe App{% endblock %}</title>
     <style>
-        /* General Styles */
         body {
             font-family: Arial, sans-serif;
             background-color: #f8f8f8;
             margin: 0;
             padding: 0;
         }
-        
-        /* Navbar Styles */
+
         .navbar {
-        background-color: #333; /* Darker background for better contrast */
-        overflow: hidden;
-        padding: 10px 0;
-        text-align: center;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 20px;
-    }
+            background-color: #333;
+            overflow: hidden;
+            padding: 10px 0;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
 
         .navbar a {
-            color: #fff; /* White text for high contrast */
+            color: #fff;
             text-decoration: none;
             padding: 12px 20px;
             font-size: 18px;
             display: inline-block;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         }
 
         .navbar a:hover {
@@ -38,12 +38,6 @@
             border-radius: 5px;
         }
 
-        .navbar a {
-        font-weight: bold;
-        text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-    }
-
-        /* Logo Styling */
         .logo-container {
             display: flex;
             align-items: center;
@@ -54,14 +48,12 @@
             margin-right: 15px;
         }
 
-        /* Auth Links */
         .auth-links {
             display: flex;
             align-items: center;
             gap: 15px;
         }
 
-        /* Page Content */
         .content {
             padding: 20px;
             text-align: center;
@@ -73,7 +65,6 @@
     <!-- Navbar -->
     <div class="navbar">
         <div class="logo-container">
-            <!-- Clickable Logo -->
             <a href="{% url 'recipes:home' %}">
                 <img src="{% static 'recipes/images/logo.png' %}" alt="Recipe App Logo" class="logo">
             </a>
@@ -81,6 +72,7 @@
         </div>
         <div>
             <a href="{% url 'recipes:recipe_list' %}">Recipes</a>
+            <a href="{% url 'recipes:records' %}">Search</a>
             <a href="#">About</a>
             <a href="#">Contact</a>
         </div>
