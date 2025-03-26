@@ -26,7 +26,7 @@ def get_chart(chart_type, data, **kwargs):
 
     if chart_type == '#1':
         # Bar chart: recipe name vs cooking time
-        plt.bar(data['name'], data['cooking_time'])
+        plt.bar(data['Name'], data['Cooking Time (min)'])
         plt.ylabel("Cooking Time (min)")
         plt.xticks(rotation=45)
         plt.title("Cooking Time by Recipe")
