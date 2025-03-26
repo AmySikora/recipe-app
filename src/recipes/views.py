@@ -44,10 +44,11 @@ def records(request):
         recipe_title = form.cleaned_data['recipe_title']
         chart_type = form.cleaned_data['chart_type']
 
+        # Filter recipes based on search (case-insensitive match)
         qs = Recipe.objects.filter(name__icontains=recipe_title)
 
         if qs.exists():
-            # Build DataFrame with custom links to detail pages
+            # Build table data with links
             data = []
             for recipe in qs:
                 recipe_link = f'<a href="{reverse("recipes:recipe_detail", args=[recipe.id])}">{recipe.name}</a>'
@@ -58,10 +59,11 @@ def records(request):
                     'Difficulty': recipe.difficulty
                 })
 
+            # Convert to DataFrame and generate chart
             recipes_df = pd.DataFrame(data)
             chart = get_chart(chart_type, recipes_df, labels=recipes_df['Name'])
 
-            # Convert to HTML with links
+            # Convert table to HTML with clickable links
             recipes_df = recipes_df.to_html(escape=False)
 
     context = {
