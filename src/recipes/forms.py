@@ -7,18 +7,12 @@ CHART_CHOICES = (
     ('#3', 'Line chart'),
 )
 
-class RecipeSearchForm(forms.Form): 
-    recipe_title = forms.CharField(
+class RecipeSearchForm(forms.Form):
+    search_term = forms.CharField(
         max_length=120,
         required=False,
-        label="Recipe Title",
-        widget=forms.TextInput(attrs={'placeholder': 'Enter a recipe name...'})
-    )
-    recipe_ingredient = forms.CharField(
-        max_length=120,
-        required=False,
-        label="Search by Ingredient",
-        widget=forms.TextInput(attrs={'placeholder': 'Enter an ingredient...'})
+        label="Search Recipes",
+        widget=forms.TextInput(attrs={'placeholder': 'Search by name or ingredient...'})
     )
     chart_type = forms.ChoiceField(
         choices=CHART_CHOICES,
