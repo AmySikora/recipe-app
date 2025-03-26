@@ -1,10 +1,10 @@
 from django import forms
 
 CHART_CHOICES = (
-    ('', 'Choose a chart type...'),  
+    ('', 'Choose a chart type...'),
     ('#1', 'Bar chart'),
     ('#2', 'Pie chart'),
-    ('#3', 'Line chart')
+    ('#3', 'Line chart'),
 )
 
 class RecipeSearchForm(forms.Form): 
@@ -15,10 +15,10 @@ class RecipeSearchForm(forms.Form):
         widget=forms.TextInput(attrs={'placeholder': 'Enter a recipe name...'})
     )
     recipe_ingredient = forms.CharField(
-        max_length = 120,
+        max_length=120,
         required=False,
-        label="Search by Ingredient"
-
+        label="Search by Ingredient",
+        widget=forms.TextInput(attrs={'placeholder': 'Enter an ingredient...'})
     )
     chart_type = forms.ChoiceField(
         choices=CHART_CHOICES,
