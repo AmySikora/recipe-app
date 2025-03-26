@@ -101,19 +101,17 @@
 
     <form method="POST">
         {% csrf_token %}
-        {{ form.recipe_title.label_tag }}
-        {{ form.recipe_title }}
         
-        {{ form.recipe_ingredient.label_tag }}
-        {{ form.recipe_ingredient }}
-        
+        {{ form.search_term.label_tag }}
+        {{ form.search_term }}
+    
         {{ form.chart_type.label_tag }}
         {{ form.chart_type }}
-        
+    
         <div style="text-align: center;">
             <button type="submit">Search</button>
         </div>
-    </form>
+    </form>    
 
     {% if recipes_df %}
         <h2>Results:</h2>
