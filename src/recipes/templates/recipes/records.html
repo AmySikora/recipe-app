@@ -20,22 +20,29 @@
         margin-bottom: 20px;
     }
 
-    .search-box {
+    form {
         display: flex;
-        justify-content: center;
-        gap: 10px;
+        flex-direction: column;
+        gap: 15px;
         margin-bottom: 30px;
     }
 
-    .search-box input[type="text"] {
-        flex: 1;
+    label {
+        font-weight: bold;
+        color: #444;
+        text-align: left;
+    }
+
+    input[type="text"],
+    select {
         padding: 10px;
         font-size: 16px;
         border: 1px solid #ccc;
         border-radius: 5px;
+        width: 100%;
     }
 
-    .search-box button {
+    button {
         padding: 10px 20px;
         background-color: #ff9800;
         color: white;
@@ -43,9 +50,10 @@
         border-radius: 5px;
         font-size: 16px;
         cursor: pointer;
+        align-self: flex-start;
     }
 
-    .search-box button:hover {
+    button:hover {
         background-color: #e68900;
     }
 
@@ -68,10 +76,17 @@
 
 <div class="container">
     <h1>Search for Recipe Records</h1>
-    
-    <form action="" method="POST" class="search-box">
+
+    <form method="POST">
         {% csrf_token %}
-        <input type="text" name="search" placeholder="Search recipes...">
+        <div>
+            {{ form.recipe_title.label_tag }}
+            {{ form.recipe_title }}
+        </div>
+        <div>
+            {{ form.chart_type.label_tag }}
+            {{ form.chart_type }}
+        </div>
         <button type="submit">Search</button>
     </form>
 
