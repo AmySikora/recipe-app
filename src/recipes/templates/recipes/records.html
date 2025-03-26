@@ -91,14 +91,21 @@
     </form>
 
     {% if recipes_df %}
-        <div class="result-table">
+    <div class="result-table">
+        <h2>Results:</h2>
+        <div style="overflow-x: auto;">
             {{ recipes_df|safe }}
         </div>
-        <div class="chart">
-            <img src="data:image/png;base64,{{ chart|safe }}" alt="Chart">
-        </div>
-    {% else %}
-        <p class="no-data">No results found. Try searching for another recipe.</p>
+    </div>
+
+    {% if chart %}
+    <div class="chart">
+        <h2>Chart Visualization:</h2>
+        <img src="data:image/png;base64,{{ chart|safe }}" alt="Chart" style="max-width:100%; border-radius: 10px; box-shadow: 1px 1px 10px rgba(0,0,0,0.1);">
+    </div>
     {% endif %}
+{% else %}
+    <p class="no-data">No results found. Try searching for another recipe.</p>
+{% endif %}
 </div>
 {% endblock %}
