@@ -24,11 +24,19 @@
         flex-direction: column;
         gap: 15px;
         margin-bottom: 30px;
+        align-items: center;
+    }
+
+    form > p {
+        width: 100%;
+        max-width: 500px;
     }
 
     label {
         font-weight: bold;
         text-align: left;
+        display: block;
+        margin-bottom: 5px;
     }
 
     input[type="text"], select {
@@ -36,10 +44,11 @@
         border-radius: 5px;
         border: 1px solid #ccc;
         font-size: 16px;
+        width: 100%;
     }
 
     button {
-        width: fit-content;
+        margin-top: 10px;
         padding: 10px 20px;
         background-color: #ff9800;
         color: white;
@@ -92,7 +101,12 @@
 
     <form method="POST">
         {% csrf_token %}
-        {{ form.as_p }}
+        {{ form.recipe_title.label_tag }}
+        {{ form.recipe_title }}
+        
+        {{ form.chart_type.label_tag }}
+        {{ form.chart_type }}
+        
         <button type="submit">Search</button>
     </form>
 
