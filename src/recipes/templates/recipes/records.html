@@ -97,7 +97,7 @@
 </style>
 
 <div class="container">
-    <h1>Search for Recipe Records</h1>
+    <h1>Search by Recipe Name or Ingredient</h1>
 
     <form method="POST">
         {% csrf_token %}
@@ -123,6 +123,7 @@
             <h2>Chart Visualization:</h2>
             <img src="data:image/png;base64,{{ chart|safe }}" alt="Chart">
         </div>
+                
     {% else %}
         <p class="no-data">No recipes found. Try another search.</p>
     {% endif %}
