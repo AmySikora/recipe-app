@@ -101,33 +101,52 @@
 
     <form method="POST">
         {% csrf_token %}
-        
         {{ form.search_term.label_tag }}
         {{ form.search_term }}
-    
+
         {{ form.chart_type.label_tag }}
         {{ form.chart_type }}
-    
+
         <div style="text-align: center;">
-            <button type="submit">Search</button>
-            <button type="submit" name="show_all" value="1">Show All</button>
+            <button type="submit" name="search" value="1">Search</button>
+            <button type="button" id="toggleResultsBtn">Show Recipes</button>
         </div>
-        
-    </form>    
+    </form>
 
-    {% if recipes_df %}
-        <h2>Results:</h2>
-        <div class="result-table">
-            {{ recipes_df|safe }}
-        </div>
+    <!-- Results Section (Toggle Display) -->
+    <div id="results-section" {% if recipes_df %}style="display: block;"{% else %}style="display: none;"{% endif %}>
 
-        <div class="chart">
-            <h2>Chart Visualization:</h2>
-            <img src="data:image/png;base64,{{ chart|safe }}" alt="Chart">
-        </div>
+        {% if recipes_df %}
+            <h2>Results:</h2>
+            <div class="result-table">
+                {{ recipes_df|safe }}
+            </div>
 
-    {% else %}
+            <div class="chart">
+                <h2>Chart Visualization:</h2>
+                <img src="data:image/png;base64,{{ chart|safe }}" alt="Chart">
+            </div>
+        {% endif %}
+    </div>
+
+    {% if not recipes_df %}
         <p class="no-data">No recipes found. Try another search.</p>
     {% endif %}
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const toggleBtn = document.getElementById('toggleResultsBtn');
+        const resultsSection = document.getElementById('results-section');
+
+        if (toggleBtn) {
+            toggleBtn.addEventListener('click', () => {
+                const isVisible = resultsSection.style.display === 'block';
+                resultsSection.style.display = isVisible ? 'none' : 'block';
+                toggleBtn.textContent = isVisible ? 'Show All' : 'Hide All';
+            });
+        }
+    });
+</script>
 {% endblock %}
+

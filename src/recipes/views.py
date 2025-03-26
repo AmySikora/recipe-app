@@ -38,6 +38,7 @@ def records(request):
     form = RecipeSearchForm(request.POST or None)
     recipes_df = None
     chart = None
+    
     qs = Recipe.objects.none()
 
     if request.method == 'POST' and form.is_valid():
@@ -50,6 +51,9 @@ def records(request):
             ) | Recipe.objects.filter(
                 ingredients__icontains=search_term
             )
+        elif 'show_all' in request.POST:
+             qs = Recipe.objects.all()
+   
         else:
             qs = Recipe.objects.all()
 
