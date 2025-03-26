@@ -41,17 +41,15 @@ def records(request):
     qs = Recipe.objects.none()
 
     if request.method == 'POST' and form.is_valid():
-        title = form.cleaned_data.get('recipe_title')
-        ingredient = form.cleaned_data.get('recipe_ingredient')
+        search_term = form.cleaned_data.get('search_term')
         chart_type = form.cleaned_data.get('chart_type')
 
-        # Filter recipes based on title, ingredient, or both
-        if title and ingredient:
-            qs = Recipe.objects.filter(name__icontains=title, ingredients__icontains=ingredient)
-        elif title:
-            qs = Recipe.objects.filter(name__icontains=title)
-        elif ingredient:
-            qs = Recipe.objects.filter(ingredients__icontains=ingredient)
+        if search_term:
+            qs = Recipe.objects.filter(
+                name__icontains=search_term
+            ) | Recipe.objects.filter(
+                ingredients__icontains=search_term
+            )
         else:
             qs = Recipe.objects.all()
 
@@ -80,6 +78,7 @@ def records(request):
     }
 
     return render(request, 'recipes/records.html', context)
+
 
 # Login View
 def login_view(request):
