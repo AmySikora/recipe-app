@@ -1,22 +1,21 @@
 {% extends 'recipes/base.html' %}
-
 {% block title %}Search Recipes{% endblock %}
 
 {% block content %}
 <style>
     .container {
-        max-width: 700px;
+        max-width: 800px;
         margin: 40px auto;
         padding: 30px;
         background-color: #fffaf0;
-        border-radius: 10px;
+        border-radius: 12px;
         box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.1);
         font-family: Arial, sans-serif;
     }
 
-    h1 {
-        font-size: 28px;
+    h1, h2 {
         color: #ff9800;
+        text-align: center;
         margin-bottom: 20px;
     }
 
@@ -29,28 +28,25 @@
 
     label {
         font-weight: bold;
-        color: #444;
         text-align: left;
     }
 
-    input[type="text"],
-    select {
+    input[type="text"], select {
         padding: 10px;
-        font-size: 16px;
-        border: 1px solid #ccc;
         border-radius: 5px;
-        width: 100%;
+        border: 1px solid #ccc;
+        font-size: 16px;
     }
 
     button {
+        width: fit-content;
         padding: 10px 20px;
         background-color: #ff9800;
         color: white;
+        font-size: 16px;
         border: none;
         border-radius: 5px;
-        font-size: 16px;
         cursor: pointer;
-        align-self: flex-start;
     }
 
     button:hover {
@@ -58,19 +54,36 @@
     }
 
     .result-table {
-        margin-top: 20px;
         overflow-x: auto;
+        margin-bottom: 40px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    th, td {
+        border: 1px solid #ccc;
+        padding: 10px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #ffebcc;
+        color: #333;
     }
 
     .chart {
+        text-align: center;
         margin-top: 30px;
-        max-width: 100%;
     }
 
     .no-data {
+        text-align: center;
         font-size: 18px;
         color: #888;
-        margin-top: 20px;
     }
 </style>
 
@@ -79,33 +92,22 @@
 
     <form method="POST">
         {% csrf_token %}
-        <div>
-            {{ form.recipe_title.label_tag }}
-            {{ form.recipe_title }}
-        </div>
-        <div>
-            {{ form.chart_type.label_tag }}
-            {{ form.chart_type }}
-        </div>
+        {{ form.as_p }}
         <button type="submit">Search</button>
     </form>
 
     {% if recipes_df %}
-    <div class="result-table">
         <h2>Results:</h2>
-        <div style="overflow-x: auto;">
+        <div class="result-table">
             {{ recipes_df|safe }}
         </div>
-    </div>
 
-    {% if chart %}
-    <div class="chart">
-        <h2>Chart Visualization:</h2>
-        <img src="data:image/png;base64,{{ chart|safe }}" alt="Chart" style="max-width:100%; border-radius: 10px; box-shadow: 1px 1px 10px rgba(0,0,0,0.1);">
-    </div>
+        <div class="chart">
+            <h2>Chart Visualization:</h2>
+            <img src="data:image/png;base64,{{ chart|safe }}" alt="Chart">
+        </div>
+    {% else %}
+        <p class="no-data">No recipes found. Try another search.</p>
     {% endif %}
-{% else %}
-    <p class="no-data">No results found. Try searching for another recipe.</p>
-{% endif %}
 </div>
 {% endblock %}
