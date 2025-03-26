@@ -109,7 +109,8 @@
 
         <div style="text-align: center;">
             <button type="submit" name="search" value="1">Search</button>
-            <button type="submit" name="show_recipes" value="1">Show All Recipes</button>
+            <button type="button" id="toggleResultsBtn">Show Recipes</button>
+
         </div>
     </form>
 
@@ -135,18 +136,18 @@
 </div>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const toggleBtn = document.getElementById('toggleResultsBtn');
-        const resultsSection = document.getElementById('results-section');
+    const toggleBtn = document.getElementById('toggleResultsBtn');
+    const resultsSection = document.getElementById('results-section');
 
-        if (toggleBtn) {
-            toggleBtn.addEventListener('click', () => {
-                const isVisible = resultsSection.style.display === 'block';
-                resultsSection.style.display = isVisible ? 'none' : 'block';
-                toggleBtn.textContent = isVisible ? 'Show All Recipes' : 'Hide All Recipes';
-            });
-        }
-    });
+    if (toggleBtn && resultsSection) {
+        let isVisible = false;
+
+        toggleBtn.addEventListener('click', () => {
+            isVisible = !isVisible;
+            resultsSection.classList.toggle('show', isVisible);
+            toggleBtn.textContent = isVisible ? 'Hide Recipes' : 'Show Recipes';
+        });
+    }
 </script>
 {% endblock %}
 
