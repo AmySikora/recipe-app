@@ -61,7 +61,8 @@ def records(request):
 
             # Convert to DataFrame and generate chart
             recipes_df = pd.DataFrame(data)
-            chart = get_chart(chart_type, recipes_df, labels=recipes_df['Name'])
+            chart = get_chart(chart_type, recipes_df, labels = [recipe.name for recipe in qs])
+
 
             # Convert table to HTML with clickable links
             recipes_df = recipes_df.to_html(escape=False)
