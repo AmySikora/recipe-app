@@ -34,17 +34,17 @@ def records(request):
     form = RecipeSearchForm(request.POST or None)
     recipes_df = None
     chart = None
-    chart_type = ''
+    chart_type = None
     search_term = ''
-
-    qs = Recipe.objects.all()
 
     if request.method == 'POST' and form.is_valid():
         search_term = form.cleaned_data.get('search_term')
         chart_type = form.cleaned_data.get('chart_type')
 
-        if search_term:
-            qs = qs.filter(name__icontains=search_term) | qs.filter(ingredients__icontains=search_term)
+    qs = Recipe.objects.all()
+
+    if search_term:
+        qs = qs.filter(name__icontains=search_term) | qs.filter(ingredients__icontains=search_term)
 
     if qs.exists():
         data = []
@@ -70,13 +70,17 @@ def records(request):
         recipes_df = df.to_html(escape=False)
 
         if chart_type:
-            chart = get_chart(chart_type, df, labels=labels)
+            chart_data = get_chart(chart_type, df, labels=labels)
+            chart = f"data:image/png;base64,{chart_data}" 
+            print("Chart base64 starts with:", chart[:30]) 
+ 
 
     context = {
         'form': form,
         'recipes_df': recipes_df,
         'chart': chart
     }
+
     return render(request, 'recipes/records.html', context)
 
 def login_view(request):
