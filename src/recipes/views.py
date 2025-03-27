@@ -71,12 +71,12 @@ def records(request):
                 chart = get_chart(chart_type, df, labels=labels)
 
         elif 'show_all' in request.POST:
-            qs = Recipe.objects.all()
+            all_qs = Recipe.objects.all()
 
-            if qs.exists():
+            if all_qs.exists():
                 all_data = []
 
-                for recipe in qs:
+                for recipe in all_qs:
                     link = f'<a href="{reverse("recipes:recipe_detail", args=[recipe.id])}">{recipe.name}</a>'
                     all_data.append({
                         'Name': link,
@@ -88,12 +88,14 @@ def records(request):
 
                 all_recipes_df = pd.DataFrame(all_data).to_html(escape=False)
 
-    return render(request, 'recipes/records.html', {
+    context = {
         'form': form,
         'recipes_df': recipes_df,
         'chart': chart,
         'all_recipes_df': all_recipes_df
-    })
+    }
+
+    return render(request, 'recipes/records.html', context)
 
 # Login View
 def login_view(request):

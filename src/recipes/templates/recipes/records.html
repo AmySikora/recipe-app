@@ -139,6 +139,12 @@
         </div>
     {% elif request.method == 'POST' %}
         <p class="no-data">No recipes found. Try another search.</p>
+        {% if not all_recipes_df %}
+  <button type="submit" name="show_all" value="1">📋 Show All Recipes</button>
+{% else %}
+  <button type="submit" name="hide_all" value="1">🙈 Hide All Recipes</button>
+{% endif %}
+
     {% endif %}
 </div>
 {% endblock %}
