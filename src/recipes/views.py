@@ -34,19 +34,17 @@ def records(request):
     form = RecipeSearchForm(request.POST or None)
     recipes_df = None
     chart = None
+    chart_type = ''
+    search_term = ''
 
-    qs = Recipe.objects.all()  # Default to show all
+    qs = Recipe.objects.all()
 
     if request.method == 'POST' and form.is_valid():
         search_term = form.cleaned_data.get('search_term')
         chart_type = form.cleaned_data.get('chart_type')
 
         if search_term:
-            qs = Recipe.objects.filter(
-                name__icontains=search_term
-            ) | Recipe.objects.filter(
-                ingredients__icontains=search_term
-            )
+            qs = qs.filter(name__icontains=search_term) | qs.filter(ingredients__icontains=search_term)
 
     if qs.exists():
         data = []
@@ -71,16 +69,14 @@ def records(request):
         df = pd.DataFrame(data)
         recipes_df = df.to_html(escape=False)
 
-        # Generate chart only if chart_type is selected
-        if request.method == 'POST':
+        if chart_type:
             chart = get_chart(chart_type, df, labels=labels)
 
     context = {
         'form': form,
         'recipes_df': recipes_df,
-        'chart': chart,
+        'chart': chart
     }
-
     return render(request, 'recipes/records.html', context)
 
 def login_view(request):

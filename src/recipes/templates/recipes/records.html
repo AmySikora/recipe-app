@@ -3,159 +3,34 @@
 {% block title %}Search Recipes{% endblock %}
 
 {% block content %}
-<style>
-    .container {
-        max-width: 800px;
-        margin: 40px auto;
-        padding: 30px;
-        background-color: #fffaf0;
-        border-radius: 12px;
-        box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.1);
-        font-family: Arial, sans-serif;
-    }
-
-    h1, h2 {
-        color: #ff9800;
-        text-align: center;
-        margin-bottom: 20px;
-    }
-
-    form {
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-        margin-bottom: 30px;
-        align-items: center;
-    }
-
-    input[type="text"] {
-        padding: 10px;
-        border-radius: 5px;
-        border: 1px solid #ccc;
-        font-size: 16px;
-        width: 100%;
-        max-width: 500px;
-    }
-
-    button {
-        padding: 10px 20px;
-        background-color: #ff9800;
-        color: white;
-        font-size: 16px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-
-    button:hover {
-        background-color: #e68900;
-    }
-
-    .result-table {
-        overflow-x: auto;
-        margin-bottom: 40px;
-    }
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 20px;
-    }
-
-    th, td {
-        border: 1px solid #ccc;
-        padding: 10px;
-        text-align: left;
-    }
-
-    th {
-        background-color: #ffebcc;
-        color: #333;
-    }
-
-    td img {
-        max-height: 60px;
-        border-radius: 6px;
-        object-fit: cover;
-    }
-
-    .no-data {
-        text-align: center;
-        font-size: 18px;
-        color: #888;
-    }
-
-    .chart {
-        text-align: center;
-        margin-top: 30px;
-    }
-
-    .chart-icon-group {
-        display: flex;
-        justify-content: center;
-        gap: 25px;
-        margin: 10px 0 20px;
-    }
-
-    .chart-icon-wrapper {
-        text-align: center;
-        font-size: 14px;
-        color: #444;
-    }
-
-    .chart-icon {
-        width: 60px;
-        height: 60px;
-        cursor: pointer;
-        opacity: 0.7;
-        transition: all 0.2s ease-in-out;
-        padding: 8px;
-        background-color: #fff;
-        border-radius: 10px;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
-
-    .chart-icon:hover {
-        opacity: 1;
-        transform: scale(1.05);
-        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-    }
-
-    .chart-icon.selected {
-        border: 2px solid #ff9800;
-        opacity: 1;
-        box-shadow: 0 4px 12px rgba(255, 152, 0, 0.4);
-    }
-</style>
-
 <div class="container">
     <h1>Search Recipes</h1>
 
-    <form method="POST">
+    <form method="POST" id="search-form">
         {% csrf_token %}
         {{ form.search_term.label_tag }}
         {{ form.search_term }}
 
+        <button type="submit">🔍 Search</button>
+
         <label for="chart-type">Select Chart Type:</label>
-        <input type="hidden" name="chart_type" id="chart-type">
+        <input type="hidden" name="chart_type" id="chart-type" value="{{ form.chart_type.value|default_if_none:'' }}">
 
         <div class="chart-icon-group">
             <div class="chart-icon-wrapper">
-                <img src="{% static 'icons/bar-chart.png' %}" alt="Bar Chart" class="chart-icon" data-chart="#1">
+                <img src="{% static 'icons/bar-chart.png' %}" alt="Bar Chart" class="chart-icon {% if form.chart_type.value == '#1' %}selected{% endif %}" data-chart="#1">
                 <div>Bar</div>
             </div>
             <div class="chart-icon-wrapper">
-                <img src="{% static 'icons/pie-chart.png' %}" alt="Pie Chart" class="chart-icon" data-chart="#2">
+                <img src="{% static 'icons/pie-chart.png' %}" alt="Pie Chart" class="chart-icon {% if form.chart_type.value == '#2' %}selected{% endif %}" data-chart="#2">
                 <div>Pie</div>
             </div>
             <div class="chart-icon-wrapper">
-                <img src="{% static 'icons/line-graph.png' %}" alt="Line Chart" class="chart-icon" data-chart="#3">
+                <img src="{% static 'icons/line-graph.png' %}" alt="Line Chart" class="chart-icon {% if form.chart_type.value == '#3' %}selected{% endif %}" data-chart="#3">
                 <div>Line</div>
             </div>
         </div>
-
-        <button type="submit">🔍 Search</button>
-    </form>    
+    </form>
 
     {% if recipes_df %}
         <h2>Recipes:</h2>
@@ -174,12 +49,14 @@
 <script>
     const icons = document.querySelectorAll('.chart-icon');
     const chartTypeInput = document.getElementById('chart-type');
+    const form = document.getElementById('search-form');
 
     icons.forEach(icon => {
         icon.addEventListener('click', () => {
             icons.forEach(i => i.classList.remove('selected'));
             icon.classList.add('selected');
             chartTypeInput.value = icon.dataset.chart;
+            form.submit();
         });
     });
 </script>
