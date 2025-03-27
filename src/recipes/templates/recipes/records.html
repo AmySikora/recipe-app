@@ -22,9 +22,9 @@
     form {
         display: flex;
         flex-direction: column;
-        align-items: center;
         gap: 15px;
         margin-bottom: 30px;
+        align-items: center;
     }
 
     form > p {
@@ -34,28 +34,28 @@
 
     label {
         font-weight: bold;
+        text-align: left;
         display: block;
         margin-bottom: 5px;
     }
 
     input[type="text"], select {
-        width: 100%;
-        max-width: 500px;
         padding: 10px;
         border-radius: 5px;
         border: 1px solid #ccc;
         font-size: 16px;
+        width: 100%;
     }
 
-    .form-buttons {
+    .button-group {
         display: flex;
         flex-direction: column;
-        align-items: center;
         gap: 10px;
         margin-top: 10px;
+        text-align: center;
     }
 
-    button {
+    .button-group button {
         padding: 10px 20px;
         background-color: #ff9800;
         color: white;
@@ -65,7 +65,7 @@
         cursor: pointer;
     }
 
-    button:hover {
+    .button-group button:hover {
         background-color: #e68900;
     }
 
@@ -101,10 +101,15 @@
         font-size: 18px;
         color: #888;
     }
+
+    #all-recipes-section {
+    display: none;
+}
+
 </style>
 
 <div class="container">
-    <h1>Search by Recipe Name or Ingredient</h1>
+    <h1>Search Recipes</h1>
 
     <form method="POST">
         {% csrf_token %}
@@ -114,37 +119,42 @@
         {{ form.chart_type.label_tag }}
         {{ form.chart_type }}
 
-        <div class="form-buttons">
+        <div class="button-group">
             <button type="submit" name="search" value="1">🔍 Search Recipes</button>
-            <button type="submit" name="show_all" value="1">📋 Show All Recipes</button>
+            <button type="submit" name="show_all" value="1">
+                {% if show_all %}🙈 Hide All Recipes{% else %}📖 Show All Recipes{% endif %}
+            </button>
         </div>
     </form>
 
     {% if recipes_df %}
-        <h2>Search Results</h2>
-        <div class="result-table">
-            {{ recipes_df|safe }}
-        </div>
+        <h2>Search Results:</h2>
+        <div class="result-table">{{ recipes_df|safe }}</div>
+    {% endif %}
 
-        {% if chart %}
+    {% if chart %}
+        <div class="chart">
+            <h2>Chart Visualization:</h2>
+            <img src="data:image/png;base64,{{ chart|safe }}" alt="Chart">
+        </div>
+    {% endif %}
+
+    <div id="all-recipes-section" {% if show_all %}style="display: block;"{% endif %}>
+        {% if all_recipes_df %}
+            <h2>All Recipes:</h2>
+            <div class="result-table">{{ all_recipes_df|safe }}</div>
+        {% endif %}
+
+        {% if all_chart %}
             <div class="chart">
-                <h2>Chart</h2>
-                <img src="data:image/png;base64,{{ chart|safe }}" alt="Chart">
+                <h2>Chart Visualization:</h2>
+                <img src="data:image/png;base64,{{ all_chart|safe }}" alt="Chart">
             </div>
         {% endif %}
-    {% elif all_recipes_df %}
-        <h2>All Recipes</h2>
-        <div class="result-table">
-            {{ all_recipes_df|safe }}
-        </div>
-    {% elif request.method == 'POST' %}
-        <p class="no-data">No recipes found. Try another search.</p>
-        {% if not all_recipes_df %}
-  <button type="submit" name="show_all" value="1">📋 Show All Recipes</button>
-{% else %}
-  <button type="submit" name="hide_all" value="1">🙈 Hide All Recipes</button>
-{% endif %}
+    </div>
 
+    {% if not recipes_df and not all_recipes_df %}
+        <p class="no-data">No recipes found. Try another search or click “Show All Recipes”.</p>
     {% endif %}
 </div>
 {% endblock %}

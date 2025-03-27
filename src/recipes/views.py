@@ -10,13 +10,11 @@ import pandas as pd
 from django.urls import reverse
 from .utils import get_chart
 
-# List View for Recipes (Protected)
 class RecipeListView(LoginRequiredMixin, ListView):
     model = Recipe
     template_name = 'recipes/recipes_list.html'
     login_url = '/login/'
 
-# Detail View for a Single Recipe (Protected)
 class RecipeDetailView(LoginRequiredMixin, DetailView):
     model = Recipe
     template_name = 'recipes/detail.html'
@@ -28,17 +26,17 @@ class RecipeDetailView(LoginRequiredMixin, DetailView):
         context['instructions_list'] = self.object.instructions.split("\n")
         return context
 
-# Home Page (Public)
 def home(request):
     return render(request, 'recipes/recipes_home.html')
 
-# Records View with Search and Chart (Protected)
 @login_required(login_url='/login/')
 def records(request):
     form = RecipeSearchForm(request.POST or None)
     recipes_df = None
-    all_recipes_df = None
     chart = None
+    all_recipes_df = None
+    all_chart = None
+    show_all = False
 
     if request.method == 'POST':
         if 'search' in request.POST and form.is_valid():
@@ -51,7 +49,7 @@ def records(request):
                 ingredients__icontains=search_term
             )
 
-            if qs.exists():
+            if search_term and qs.exists():
                 data = []
                 labels = []
 
@@ -70,34 +68,42 @@ def records(request):
                 recipes_df = df.to_html(escape=False)
                 chart = get_chart(chart_type, df, labels=labels)
 
+            form = RecipeSearchForm()  # Reset form
+
         elif 'show_all' in request.POST:
-            all_qs = Recipe.objects.all()
+            show_all = True
+            qs = Recipe.objects.all()
 
-            if all_qs.exists():
-                all_data = []
+            if qs.exists():
+                data = []
+                labels = []
 
-                for recipe in all_qs:
+                for recipe in qs:
                     link = f'<a href="{reverse("recipes:recipe_detail", args=[recipe.id])}">{recipe.name}</a>'
-                    all_data.append({
+                    data.append({
                         'Name': link,
                         'Ingredients': recipe.ingredients,
                         'Cooking Time (min)': recipe.cooking_time,
                         'Difficulty': recipe.difficulty,
                         'Ingredient Count': len(recipe.ingredients.split(','))
                     })
+                    labels.append(recipe.name)
 
-                all_recipes_df = pd.DataFrame(all_data).to_html(escape=False)
+                df = pd.DataFrame(data)
+                all_recipes_df = df.to_html(escape=False)
+                all_chart = get_chart('#1', df, labels=labels)  # default bar chart for all
 
     context = {
         'form': form,
         'recipes_df': recipes_df,
         'chart': chart,
-        'all_recipes_df': all_recipes_df
+        'all_recipes_df': all_recipes_df,
+        'all_chart': all_chart,
+        'show_all': show_all,
     }
 
     return render(request, 'recipes/records.html', context)
 
-# Login View
 def login_view(request):
     if request.user.is_authenticated:
         return redirect('recipes:recipe_list')
@@ -125,7 +131,6 @@ def login_view(request):
         'error_message': error_message
     })
 
-# Logout View
 def logout_view(request):
     logout(request)
     return render(request, 'auth/success.html')
