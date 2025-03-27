@@ -31,14 +31,23 @@ class RecipeModelTest(TestCase):
 
 class RecipeSearchFormTest(TestCase):
     def test_valid_form_data(self):
-        # Test if the form accepts valid input
-        form = RecipeSearchForm(data={'search_term': 'cake', 'chart_type': 'bar'})
+    # Test valid search term and valid chart_type choice
+        form_data = {
+            'search_term': 'cake',
+            'chart_type': '#1'  # Must match value from CHART_CHOICES
+        }
+        form = RecipeSearchForm(data=form_data)
         self.assertTrue(form.is_valid())
 
+
     def test_blank_form_data(self):
-        # Test if the form still validates without search input
-        form = RecipeSearchForm(data={'search_term': '', 'chart_type': 'bar'})
-        self.assertTrue(form.is_valid())
+    # Test that form is invalid if chart_type is not selected (it's required)
+        form_data = {
+            'search_term': '',       # Optional
+            'chart_type': ''         # Invalid because '' is not a valid choice
+        }
+        form = RecipeSearchForm(data=form_data)
+        self.assertFalse(form.is_valid())
 
     def test_invalid_chart_type(self):
         # Test if the form rejects an invalid chart type

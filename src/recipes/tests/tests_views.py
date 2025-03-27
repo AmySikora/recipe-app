@@ -2,9 +2,14 @@ from django.test import TestCase
 from django.urls import reverse
 from recipes.models import Recipe
 
+from django.contrib.auth.models import User
+
 class RecipeViewsTest(TestCase):
     def setUp(self):
-        # Sets up test data for views
+        # Create a test user and log in
+        self.user = User.objects.create_user(username='testuser', password='testpass')
+        self.client.login(username='testuser', password='testpass')
+
         self.recipe = Recipe.objects.create(
             name="Vanilla Cupcake",
             cooking_time=45,
