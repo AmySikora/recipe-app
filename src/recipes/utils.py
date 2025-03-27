@@ -43,11 +43,12 @@ def get_chart(chart_type, data, **kwargs):
         plt.pie(data['Cooking Time (min)'], labels=labels, autopct='%1.1f%%')
         plt.title("Cooking Time Distribution")
 
-    elif chart_type == '#3':  # Line chart
-        plt.plot(labels, data['Cooking Time (min)'], marker='o')
+    elif chart_type == '#3': 
+        data['Ingredient Count'] = data['Ingredients'].apply(lambda x: len(x.split(',')))
+        plt.plot(labels, data['Ingredient Count'], marker='o', linestyle='-', color='green')
         plt.xticks(rotation=45)
-        plt.ylabel("Cooking Time (min)")
-        plt.title("Cooking Time Trend")
+        plt.ylabel("Ingredient Count")
+        plt.title("Ingredient Count per Recipe")
 
     else:
         print('Unknown chart type')
