@@ -40,12 +40,17 @@ def records(request):
     chart = None
     qs = Recipe.objects.none()
 
+    show_results = False
+
     if request.method == 'POST':
         if form.is_valid():
             search_term = form.cleaned_data.get('search_term')
             chart_type = form.cleaned_data.get('chart_type')
 
             # If "Search" is clicked
+            if 'search' in request.POST or 'show_all' in request.POST:
+                show_results = True
+            
             if 'search' in request.POST and search_term:
                 qs = Recipe.objects.filter(
                     name__icontains=search_term
@@ -79,7 +84,7 @@ def records(request):
         'form': form,
         'recipes_df': recipes_df,
         'chart': chart,
-        'show_results': bool(recipes_df),
+        'show_results': show_results, 
     }
 
     return render(request, 'recipes/records.html', context)
