@@ -118,11 +118,12 @@
         {{ form.chart_type.label_tag }}
         {{ form.chart_type }}
 
-        <div style="text-align: center; display: flex; flex-direction: column; gap: 10px;">
+        <div style="text-align: center;">
             <button type="submit" name="search" value="1">Search</button>
-            <button type="submit" name="show_all" value="1">Show All Recipes</button>
+            {% if recipes_df %}
+            <button type="button" id="toggleResultsBtn">Show All Recipes</button>
+            {% endif %}
         </div>
-        
     </form>
 
     <!-- Results Section (Toggle Display) -->
