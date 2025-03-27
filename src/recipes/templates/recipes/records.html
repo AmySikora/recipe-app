@@ -86,36 +86,46 @@
     }
 
     .chart {
-    text-align: center;
-    margin-top: 30px;
-}
+        text-align: center;
+        margin-top: 30px;
+    }
+
     .chart-icon-group {
         display: flex;
         justify-content: center;
-        gap: 15px;
-        margin-bottom: 15px;
+        gap: 25px;
+        margin: 10px 0 20px;
+    }
+
+    .chart-icon-wrapper {
+        text-align: center;
+        font-size: 14px;
+        color: #444;
     }
 
     .chart-icon {
-        width: 50px;
-        height: 50px;
+        width: 60px;
+        height: 60px;
         cursor: pointer;
-        opacity: 0.6;
-        transition: transform 0.2s, opacity 0.2s;
+        opacity: 0.7;
+        transition: all 0.2s ease-in-out;
+        padding: 8px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
 
     .chart-icon:hover {
         opacity: 1;
-        transform: scale(1.1);
+        transform: scale(1.05);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
     }
 
     .chart-icon.selected {
-        opacity: 1;
         border: 2px solid #ff9800;
-        border-radius: 8px;
-        padding: 2px;
+        opacity: 1;
+        box-shadow: 0 4px 12px rgba(255, 152, 0, 0.4);
     }
-
 </style>
 
 <div class="container">
@@ -125,30 +135,39 @@
         {% csrf_token %}
         {{ form.search_term.label_tag }}
         {{ form.search_term }}
-    
-        <label for="chart-type">Select Chart Type:</label>
-<input type="hidden" name="chart_type" id="chart-type">
 
-<div class="chart-icon-group">
-    <img src="{% static 'icons/bar-chart.png' %}" alt="Bar Chart" class="chart-icon" data-chart="#1">
-    <img src="{% static 'icons/pie-chart.png' %}" alt="Pie Chart" class="chart-icon" data-chart="#2">
-    <img src="{% static 'icons/line-graph.png' %}" alt="Line Chart" class="chart-icon" data-chart="#3">
-</div>
+        <label for="chart-type">Select Chart Type:</label>
+        <input type="hidden" name="chart_type" id="chart-type">
+
+        <div class="chart-icon-group">
+            <div class="chart-icon-wrapper">
+                <img src="{% static 'icons/bar-chart.png' %}" alt="Bar Chart" class="chart-icon" data-chart="#1">
+                <div>Bar</div>
+            </div>
+            <div class="chart-icon-wrapper">
+                <img src="{% static 'icons/pie-chart.png' %}" alt="Pie Chart" class="chart-icon" data-chart="#2">
+                <div>Pie</div>
+            </div>
+            <div class="chart-icon-wrapper">
+                <img src="{% static 'icons/line-graph.png' %}" alt="Line Chart" class="chart-icon" data-chart="#3">
+                <div>Line</div>
+            </div>
+        </div>
 
         <button type="submit">🔍 Search</button>
     </form>    
 
     {% if recipes_df %}
-    <h2>Recipes:</h2>
-    <div class="result-table">{{ recipes_df|safe }}</div>
-{% endif %}
+        <h2>Recipes:</h2>
+        <div class="result-table">{{ recipes_df|safe }}</div>
+    {% endif %}
 
-{% if chart %}
-    <div class="chart">
-        <h2>Chart Visualization:</h2>
-        <img src="data:image/png;base64,{{ chart }}" alt="Chart">
-    </div>
-{% endif %}
+    {% if chart %}
+        <div class="chart">
+            <h2>Chart Visualization:</h2>
+            <img src="data:image/png;base64,{{ chart }}" alt="Chart">
+        </div>
+    {% endif %}
 </div>
 {% endblock %}
 
@@ -158,13 +177,8 @@
 
     icons.forEach(icon => {
         icon.addEventListener('click', () => {
-            // Clear previous selection
             icons.forEach(i => i.classList.remove('selected'));
-
-            // Highlight selected
             icon.classList.add('selected');
-
-            // Set hidden input
             chartTypeInput.value = icon.dataset.chart;
         });
     });
