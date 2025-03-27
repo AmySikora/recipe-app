@@ -1,0 +1,28 @@
+{% extends 'recipes/base.html' %}
+{% block title %}Recipe Charts{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Recipe Charts</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+            {{ form.chart_type.label_tag }}
+            {{ form.chart_type }}
+        </div>
+        <button class="btn btn-primary" type="submit">📊 Show Chart</button>
+    </form>
+
+    {% if chart %}
+        <div class="chart mt-4">
+            <h2>Chart Visualization:</h2>
+            <img src="data:image/png;base64,{{ chart }}" alt="Chart" class="img-fluid" style="max-width: 90%;">
+        </div>
+    {% endif %}
+
+    {% if not chart %}
+        <p class="no-data mt-3">Select a chart type and click “Show Chart” to see recipe statistics.</p>
+    {% endif %}
+</div>
+{% endblock %}
