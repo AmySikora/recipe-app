@@ -118,12 +118,11 @@
         {{ form.chart_type.label_tag }}
         {{ form.chart_type }}
 
-        <div style="text-align: center;">
+        <div style="text-align: center; display: flex; flex-direction: column; gap: 10px;">
             <button type="submit" name="search" value="1">Search</button>
-            {% if recipes_df %}
-            <button type="button" id="toggleResultsBtn">Show Recipes</button>
-            {% endif %}
+            <button type="submit" name="show_all" value="1">Show All Recipes</button>
         </div>
+        
     </form>
 
     <!-- Results Section (Toggle Display) -->
@@ -156,7 +155,7 @@
         toggleBtn.addEventListener('click', () => {
             isVisible = !isVisible;
             resultsSection.classList.toggle('show', isVisible);
-            toggleBtn.textContent = isVisible ? 'Hide Recipes' : 'Show Recipes';
+            toggleBtn.textContent = isVisible ? 'Hide All Recipes' : 'Show All Recipes';
         });
     }
 </script>
