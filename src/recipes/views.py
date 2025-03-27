@@ -38,25 +38,21 @@ def records(request):
     form = RecipeSearchForm(request.POST or None)
     recipes_df = None
     chart = None
-    show_results = False
     qs = Recipe.objects.none()
 
-    if request.method == 'POST':
-        if 'show_all' in request.POST:
+    if request.method == 'POST' and form.is_valid():
+        search_term = form.cleaned_data.get('search_term')
+        chart_type = form.cleaned_data.get('chart_type')
+
+        if search_term:
+            qs = Recipe.objects.filter(
+                name__icontains=search_term
+            ) | Recipe.objects.filter(
+                ingredients__icontains=search_term
+            )
+            
+        else:
             qs = Recipe.objects.all()
-            show_results = True
-
-        elif form.is_valid() and 'search' in request.POST:
-            search_term = form.cleaned_data.get('search_term')
-            chart_type = form.cleaned_data.get('chart_type')
-
-            if search_term:
-                qs = Recipe.objects.filter(
-                    name__icontains=search_term
-                ) | Recipe.objects.filter(
-                    ingredients__icontains=search_term
-                )
-                show_results = True
 
         if qs.exists():
             data = []
@@ -73,17 +69,17 @@ def records(request):
                 labels.append(recipe.name)
 
             recipes_df = pd.DataFrame(data)
-            chart = get_chart(form.cleaned_data.get('chart_type'), recipes_df, labels=labels)
+            chart = get_chart(chart_type, recipes_df, labels=labels)
             recipes_df = recipes_df.to_html(escape=False)
 
     context = {
         'form': form,
         'recipes_df': recipes_df,
         'chart': chart,
-        'show_results': show_results,
     }
 
     return render(request, 'recipes/records.html', context)
+
 
 # Login View
 def login_view(request):

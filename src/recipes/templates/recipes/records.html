@@ -95,24 +95,16 @@
         color: #888;
     }
 
-    /* Animation */
+    /* New toggle animation */
     #results-section {
         max-height: 0;
         overflow: hidden;
-        transition: max-height 0.4s ease;
+        transition: max-height 0.5s ease;
     }
 
     #results-section.show {
         max-height: 1500px;
     }
-
-    .hidden {
-    display: none;
-}
-.visible {
-    display: block;
-}
-
 </style>
 
 <div class="container">
@@ -128,14 +120,14 @@
 
         <div style="text-align: center;">
             <button type="submit" name="search" value="1">Search</button>
-            <button type="submit" name="show_all" value="1">Show Recipes</button>
+            {% if recipes_df %}
+            <button type="button" id="toggleResultsBtn">Show Recipes</button>
+            {% endif %}
         </div>
-        
     </form>
 
-    <!-- Results Section (initially hidden unless searched or toggled) -->
-    <div id="results-section" class="{% if show_results %}visible{% else %}hidden{% endif %}">
-
+    <!-- Results Section (Toggle Display) -->
+    <div id="results-section" class="{% if recipes_df %}show{% endif %}">
         {% if recipes_df %}
             <h2>Results:</h2>
             <div class="result-table">
