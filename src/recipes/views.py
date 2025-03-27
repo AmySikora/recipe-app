@@ -5,8 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
-from .forms import RecipeSearchForm
-from .forms import ChartForm 
+from .forms import RecipeSearchForm 
 import pandas as pd
 from django.urls import reverse
 from .utils import get_chart
@@ -35,72 +34,51 @@ def records(request):
     form = RecipeSearchForm(request.POST or None)
     recipes_df = None
     chart = None
-    all_recipes_df = None
-    all_chart = None
-    show_all = False
 
-    if request.method == 'POST':
-        if 'search' in request.POST and form.is_valid():
-            search_term = form.cleaned_data.get('search_term')
-            chart_type = form.cleaned_data.get('chart_type')
+    qs = Recipe.objects.all()  # Default to show all
 
+    if request.method == 'POST' and form.is_valid():
+        search_term = form.cleaned_data.get('search_term')
+        chart_type = form.cleaned_data.get('chart_type')
+
+        if search_term:
             qs = Recipe.objects.filter(
                 name__icontains=search_term
             ) | Recipe.objects.filter(
                 ingredients__icontains=search_term
             )
 
-            if search_term and qs.exists():
-                data = []
-                labels = []
+    if qs.exists():
+        data = []
+        labels = []
 
-                for recipe in qs:
-                    link = f'<a href="{reverse("recipes:recipe_detail", args=[recipe.id])}">{recipe.name}</a>'
-                    data.append({
-                        'Name': link,
-                        'Ingredients': recipe.ingredients,
-                        'Cooking Time (min)': recipe.cooking_time,
-                        'Difficulty': recipe.difficulty,
-                        'Ingredient Count': len(recipe.ingredients.split(','))
-                    })
-                    labels.append(recipe.name)
+        for recipe in qs:
+            image_tag = f'<img src="{recipe.pic.url}" alt="{recipe.name}" height="60">'
+            link = f'<a href="{reverse("recipes:recipe_detail", args=[recipe.id])}">{recipe.name}</a>'
+            ingredient_count = len(recipe.ingredients.split(','))
 
-                df = pd.DataFrame(data)
-                recipes_df = df.to_html(escape=False)
-                chart = get_chart(chart_type, df, labels=labels)
+            data.append({
+                'Image': image_tag,
+                'Name': link,
+                'Ingredients': recipe.ingredients,
+                'Number of Ingredients': ingredient_count,
+                'Cooking Time (min)': recipe.cooking_time,
+                'Difficulty': recipe.difficulty
+            })
 
-            form = RecipeSearchForm()  # Reset form
+            labels.append(recipe.name)
 
-        elif 'show_all' in request.POST:
-            show_all = True
-            qs = Recipe.objects.all()
+        df = pd.DataFrame(data)
+        recipes_df = df.to_html(escape=False)
 
-            if qs.exists():
-                data = []
-                labels = []
-
-                for recipe in qs:
-                    link = f'<a href="{reverse("recipes:recipe_detail", args=[recipe.id])}">{recipe.name}</a>'
-                    data.append({
-                        'Name': link,
-                        'Ingredients': recipe.ingredients,
-                        'Cooking Time (min)': recipe.cooking_time,
-                        'Difficulty': recipe.difficulty,
-                        'Ingredient Count': len(recipe.ingredients.split(','))
-                    })
-                    labels.append(recipe.name)
-
-                df = pd.DataFrame(data)
-                all_recipes_df = df.to_html(escape=False)
-                all_chart = get_chart('#1', df, labels=labels)  # default bar chart for all
+        # Generate chart only if chart_type is selected
+        if request.method == 'POST':
+            chart = get_chart(chart_type, df, labels=labels)
 
     context = {
         'form': form,
         'recipes_df': recipes_df,
         'chart': chart,
-        'all_recipes_df': all_recipes_df,
-        'all_chart': all_chart,
-        'show_all': show_all,
     }
 
     return render(request, 'recipes/records.html', context)

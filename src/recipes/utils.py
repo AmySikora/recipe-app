@@ -3,11 +3,6 @@ from io import BytesIO
 import base64
 import matplotlib.pyplot as plt
 
-# Optional helper (you can delete if not used)
-def get_recipename_from_id(val):
-    return Recipe.objects.get(id=val)
-
-# Convert matplotlib chart to base64 image
 def get_graph():
     buffer = BytesIO()
     plt.savefig(buffer, format='png')
@@ -17,41 +12,33 @@ def get_graph():
     buffer.close()
     return graph
 
-# Create chart based on type
 def get_chart(chart_type, data, **kwargs):
     plt.switch_backend('AGG')
     fig = plt.figure(figsize=(8, 4))
     labels = kwargs.get('labels', [])
 
+    data['Ingredient Count'] = data['Ingredients'].apply(lambda x: len(x.split(',')))
+
     if chart_type == '#1':  # Bar chart
-        # Count ingredients for each recipe
-        data['Ingredient Count'] = data['Ingredients'].apply(lambda x: len(x.split(',')))
+        plt.bar(labels, data['Cooking Time (min)'])
+        plt.xticks(rotation=45)
+        plt.ylabel("Cooking Time (min)")
+        plt.title("Cooking Time by Recipe")
 
-        x = range(len(labels))
-        width = 0.35
+    elif chart_type == '#2':  # Pie chart: difficulty distribution
+        difficulty_counts = data['Difficulty'].value_counts()
+        plt.pie(difficulty_counts, labels=difficulty_counts.index, autopct='%1.1f%%')
+        plt.title("Recipe Difficulty Distribution")
 
-        # Bar chart with side-by-side bars
-        plt.bar([i - width/2 for i in x], data['Cooking Time (min)'], width=width, label='Cooking Time')
-        plt.bar([i + width/2 for i in x], data['Ingredient Count'], width=width, label='Ingredient Count')
-
-        plt.xticks(ticks=x, labels=labels, rotation=45)
-        plt.ylabel("Minutes / Count")
-        plt.title("Recipe Cooking Time vs Ingredient Count")
-        plt.legend()
-
-    elif chart_type == '#2':  # Pie chart
-        plt.pie(data['Cooking Time (min)'], labels=labels, autopct='%1.1f%%')
-        plt.title("Cooking Time Distribution")
-
-    elif chart_type == '#3': 
-        data['Ingredient Count'] = data['Ingredients'].apply(lambda x: len(x.split(',')))
-        plt.plot(labels, data['Ingredient Count'], marker='o', linestyle='-', color='green')
+    elif chart_type == '#3':  # Line chart
+        sorted_data = data.sort_values(by='Ingredient Count')
+        plt.plot(sorted_data['Name'], sorted_data['Ingredient Count'], marker='o')
         plt.xticks(rotation=45)
         plt.ylabel("Ingredient Count")
         plt.title("Ingredient Count per Recipe")
 
     else:
-        print('Unknown chart type')
+        plt.text(0.5, 0.5, 'No chart type selected', ha='center')
 
     plt.tight_layout()
     return get_graph()

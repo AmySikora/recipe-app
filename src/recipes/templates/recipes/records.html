@@ -1,4 +1,5 @@
 {% extends 'recipes/base.html' %}
+{% load static %}
 {% block title %}Search Recipes{% endblock %}
 
 {% block content %}
@@ -27,35 +28,16 @@
         align-items: center;
     }
 
-    form > p {
-        width: 100%;
-        max-width: 500px;
-    }
-
-    label {
-        font-weight: bold;
-        text-align: left;
-        display: block;
-        margin-bottom: 5px;
-    }
-
-    input[type="text"], select {
+    input[type="text"] {
         padding: 10px;
         border-radius: 5px;
         border: 1px solid #ccc;
         font-size: 16px;
         width: 100%;
+        max-width: 500px;
     }
 
-    .button-group {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        margin-top: 10px;
-        text-align: center;
-    }
-
-    .button-group button {
+    button {
         padding: 10px 20px;
         background-color: #ff9800;
         color: white;
@@ -65,7 +47,7 @@
         cursor: pointer;
     }
 
-    .button-group button:hover {
+    button:hover {
         background-color: #e68900;
     }
 
@@ -91,9 +73,10 @@
         color: #333;
     }
 
-    .chart {
-        text-align: center;
-        margin-top: 30px;
+    td img {
+        max-height: 60px;
+        border-radius: 6px;
+        object-fit: cover;
     }
 
     .no-data {
@@ -102,9 +85,36 @@
         color: #888;
     }
 
-    #all-recipes-section {
-    display: none;
+    .chart {
+    text-align: center;
+    margin-top: 30px;
 }
+    .chart-icon-group {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+
+    .chart-icon {
+        width: 50px;
+        height: 50px;
+        cursor: pointer;
+        opacity: 0.6;
+        transition: transform 0.2s, opacity 0.2s;
+    }
+
+    .chart-icon:hover {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+
+    .chart-icon.selected {
+        opacity: 1;
+        border: 2px solid #ff9800;
+        border-radius: 8px;
+        padding: 2px;
+    }
 
 </style>
 
@@ -115,46 +125,47 @@
         {% csrf_token %}
         {{ form.search_term.label_tag }}
         {{ form.search_term }}
+    
+        <label for="chart-type">Select Chart Type:</label>
+<input type="hidden" name="chart_type" id="chart-type">
 
-        {{ form.chart_type.label_tag }}
-        {{ form.chart_type }}
+<div class="chart-icon-group">
+    <img src="{% static 'icons/bar-chart.png' %}" alt="Bar Chart" class="chart-icon" data-chart="#1">
+    <img src="{% static 'icons/pie-chart.png' %}" alt="Pie Chart" class="chart-icon" data-chart="#2">
+    <img src="{% static 'icons/line-graph.png' %}" alt="Line Chart" class="chart-icon" data-chart="#3">
+</div>
 
-        <div class="button-group">
-            <button type="submit" name="search" value="1">🔍 Search Recipes</button>
-            <button type="submit" name="show_all" value="1">
-                {% if show_all %}🙈 Hide All Recipes{% else %}📖 Show All Recipes{% endif %}
-            </button>
-        </div>
-    </form>
+        <button type="submit">🔍 Search</button>
+    </form>    
 
     {% if recipes_df %}
-        <h2>Search Results:</h2>
-        <div class="result-table">{{ recipes_df|safe }}</div>
-    {% endif %}
+    <h2>Recipes:</h2>
+    <div class="result-table">{{ recipes_df|safe }}</div>
+{% endif %}
 
-    {% if chart %}
-        <div class="chart">
-            <h2>Chart Visualization:</h2>
-            <img src="data:image/png;base64,{{ chart|safe }}" alt="Chart">
-        </div>
-    {% endif %}
-
-    <div id="all-recipes-section" {% if show_all %}style="display: block;"{% endif %}>
-        {% if all_recipes_df %}
-            <h2>All Recipes:</h2>
-            <div class="result-table">{{ all_recipes_df|safe }}</div>
-        {% endif %}
-
-        {% if all_chart %}
-            <div class="chart">
-                <h2>Chart Visualization:</h2>
-                <img src="data:image/png;base64,{{ all_chart|safe }}" alt="Chart">
-            </div>
-        {% endif %}
+{% if chart %}
+    <div class="chart">
+        <h2>Chart Visualization:</h2>
+        <img src="data:image/png;base64,{{ chart }}" alt="Chart">
     </div>
-
-    {% if not recipes_df and not all_recipes_df %}
-        <p class="no-data">No recipes found. Try another search or click “Show All Recipes”.</p>
-    {% endif %}
+{% endif %}
 </div>
 {% endblock %}
+
+<script>
+    const icons = document.querySelectorAll('.chart-icon');
+    const chartTypeInput = document.getElementById('chart-type');
+
+    icons.forEach(icon => {
+        icon.addEventListener('click', () => {
+            // Clear previous selection
+            icons.forEach(i => i.classList.remove('selected'));
+
+            // Highlight selected
+            icon.classList.add('selected');
+
+            // Set hidden input
+            chartTypeInput.value = icon.dataset.chart;
+        });
+    });
+</script>

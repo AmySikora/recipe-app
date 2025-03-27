@@ -10,8 +10,7 @@
             background-color: #f8f8f8;
             margin: 0;
             padding: 0;
-            padding-top: 70px; /* Adjusted for smaller navbar */
-            font-size: 0.95rem;
+            padding-top: 80px; /* Push content below the fixed navbar */
         }
 
         .navbar {
@@ -19,12 +18,12 @@
             top: 0;
             width: 100%;
             background-color: #333;
-            padding: 8px 0;
+            padding: 10px 0;
             text-align: center;
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 15px;
+            gap: 20px;
             z-index: 1000;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
@@ -32,8 +31,8 @@
         .navbar a {
             color: #fff;
             text-decoration: none;
-            padding: 8px 14px;
-            font-size: 0.95rem;
+            padding: 12px 20px;
+            font-size: 18px;
             display: inline-block;
             font-weight: bold;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
@@ -50,41 +49,19 @@
         }
 
         .logo {
-            max-height: 32px;
-            margin-right: 10px;
+            max-height: 40px;
+            margin-right: 15px;
         }
 
         .auth-links {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 15px;
         }
 
         .content {
             padding: 20px;
-            max-width: 850px;
-            margin: 0 auto;
             text-align: center;
-        }
-
-        h1, h2, h3 {
-            font-size: 1.4rem;
-        }
-
-        table {
-            font-size: 0.9rem;
-        }
-
-        input,
-        select,
-        textarea {
-            font-size: 0.9rem;
-            padding: 0.4rem;
-        }
-
-        .btn {
-            font-size: 0.9rem;
-            padding: 0.4rem 0.9rem;
         }
     </style>
 </head>
@@ -101,7 +78,7 @@
         <div>
             <a href="{% url 'recipes:recipe_list' %}">Recipes</a>
             <a href="{% url 'recipes:records' %}">Search</a>
-            <a href="{% url 'recipes:charts' %}">Charts</a>
+            <a href="{% url 'recipes:charts' %}">Charts</a>  <!-- ✅ Updated -->
             <a href="#">Contact</a>
         </div>
         <div class="auth-links">
