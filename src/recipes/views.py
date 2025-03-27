@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import RecipeSearchForm
+from .forms import ChartForm 
 import pandas as pd
 from django.urls import reverse
 from .utils import get_chart
@@ -105,13 +106,12 @@ def records(request):
     return render(request, 'recipes/records.html', context)
    
 def charts_view(request):
-    from .forms import ChartForm  
     form = ChartForm(request.POST or None)
     chart = None
 
     if request.method == 'POST' and form.is_valid():
-        chart_type = form.cleaned_data.get('chart_type')
-        qs = Recipe.objects.all()
+        chart_type = form.cleaned_data['chart_type']
+        qs = Recipe.objects.all()  # All recipes, no filtering
 
         if qs.exists():
             data = []
@@ -134,7 +134,6 @@ def charts_view(request):
         'form': form,
         'chart': chart
     })
-
 
 def login_view(request):
     if request.user.is_authenticated:

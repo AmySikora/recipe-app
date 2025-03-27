@@ -18,3 +18,14 @@ class RecipeSearchForm(forms.Form):
         choices=CHART_CHOICES,
         label="Chart Type"
     )
+
+class ChartForm(forms.Form):
+    chart_type = forms.ChoiceField(
+        choices=[
+            ('#1', 'Bar Chart (Cooking Time)'),
+            ('#2', 'Pie Chart (Difficulty)'),
+            ('#3', 'Line Chart (Ingredient Count)')
+        ],
+        label='Chart Type'
+    )
+
