@@ -103,6 +103,38 @@ def records(request):
     }
 
     return render(request, 'recipes/records.html', context)
+   
+def charts_view(request):
+    from .forms import ChartForm  
+    form = ChartForm(request.POST or None)
+    chart = None
+
+    if request.method == 'POST' and form.is_valid():
+        chart_type = form.cleaned_data.get('chart_type')
+        qs = Recipe.objects.all()
+
+        if qs.exists():
+            data = []
+            labels = []
+
+            for recipe in qs:
+                labels.append(recipe.name)
+                data.append({
+                    'Name': recipe.name,
+                    'Ingredients': recipe.ingredients,
+                    'Cooking Time (min)': recipe.cooking_time,
+                    'Difficulty': recipe.difficulty,
+                    'Ingredient Count': len(recipe.ingredients.split(','))
+                })
+
+            df = pd.DataFrame(data)
+            chart = get_chart(chart_type, df, labels=labels)
+
+    return render(request, 'recipes/charts.html', {
+        'form': form,
+        'chart': chart
+    })
+
 
 def login_view(request):
     if request.user.is_authenticated:
