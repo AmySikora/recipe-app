@@ -14,7 +14,7 @@ def get_graph():
 
 def get_chart(chart_type, data, **kwargs):
     plt.switch_backend('AGG')
-    fig, axs = plt.subplots(nrows=3, ncols=1, figsize=(8, 12))  # vertical layout
+    fig, axs = plt.subplots(nrows=3, ncols=1, figsize=(8, 12)) 
 
     labels = kwargs.get('labels', [])
     data['Ingredient Count'] = data['Ingredients'].apply(lambda x: len(x.split(',')))
@@ -31,7 +31,7 @@ def get_chart(chart_type, data, **kwargs):
 
     for difficulty in data['Difficulty'].unique():
         subset = data[data['Difficulty'] == difficulty]
-        names = subset['Name'].str.replace(r'<[^>]*>', '', regex=True).tolist()  # Remove HTML
+        names = subset['Name'].str.replace(r'<[^>]*>', '', regex=True).tolist()  
         label = f"{difficulty}: " + ", ".join(names)
         difficulty_labels.append(label)
         difficulty_values.append(len(subset))

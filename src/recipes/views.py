@@ -5,6 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm
 from .forms import RecipeSearchForm 
 import pandas as pd
 from django.urls import reverse
@@ -29,6 +30,18 @@ class RecipeDetailView(LoginRequiredMixin, DetailView):
 
 def home(request):
     return render(request, 'recipes/recipes_home.html')
+
+def signup_view(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)  
+            return redirect('recipes:recipe_list') 
+    else:
+        form = UserCreationForm()
+    
+    return render(request, 'auth/signup.html', {'form': form})
 
 @login_required(login_url='/login/')
 def records(request):
