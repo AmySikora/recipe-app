@@ -14,31 +14,30 @@ def get_graph():
 
 def get_chart(chart_type, data, **kwargs):
     plt.switch_backend('AGG')
-    fig = plt.figure(figsize=(8, 4))
-    labels = kwargs.get('labels', [])
+    fig, axs = plt.subplots(nrows=3, ncols=1, figsize=(8, 12))  # vertical layout
 
+    labels = kwargs.get('labels', [])
     data['Ingredient Count'] = data['Ingredients'].apply(lambda x: len(x.split(',')))
 
-    if chart_type == '#1':  # Bar chart
-        plt.bar(labels, data['Cooking Time (min)'])
-        plt.xticks(rotation=45)
-        plt.ylabel("Cooking Time (min)")
-        plt.title("Cooking Time by Recipe")
+    # Bar Chart
+    axs[0].bar(labels, data['Cooking Time (min)'], color='skyblue')
+    axs[0].set_title("Cooking Time")
+    axs[0].set_ylabel("Minutes")
+    axs[0].tick_params(axis='x', rotation=45)
 
-    elif chart_type == '#2':  # Pie chart: difficulty distribution
-        difficulty_counts = data['Difficulty'].value_counts()
-        plt.pie(difficulty_counts, labels=difficulty_counts.index, autopct='%1.1f%%')
-        plt.title("Recipe Difficulty Distribution")
+    # Pie Chart
+    difficulty_counts = data['Difficulty'].value_counts()
+    axs[1].pie(difficulty_counts, labels=difficulty_counts.index, autopct='%1.1f%%')
+    axs[1].set_title("Difficulty")
 
-    elif chart_type == '#3':  # Line chart
-        sorted_data = data.sort_values(by='Ingredient Count')
-        plt.plot(sorted_data['Name'], sorted_data['Ingredient Count'], marker='o')
-        plt.xticks(rotation=45)
-        plt.ylabel("Ingredient Count")
-        plt.title("Ingredient Count per Recipe")
-
-    else:
-        plt.text(0.5, 0.5, 'No chart type selected', ha='center')
+    # Line Chart
+    sorted_data = data.copy()
+    sorted_data['Name'] = sorted_data['Name'].str.replace(r'<[^>]*>', '', regex=True)  # Remove HTML
+    sorted_data = sorted_data.sort_values(by='Ingredient Count')
+    axs[2].plot(sorted_data['Name'], sorted_data['Ingredient Count'], marker='o', color='orange')
+    axs[2].set_title("Ingredient Count")
+    axs[2].set_ylabel("Count")
+    axs[2].tick_params(axis='x', rotation=45)
 
     plt.tight_layout()
     return get_graph()

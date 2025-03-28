@@ -49,6 +49,12 @@ def records(request):
     if qs.exists():
         data = []
         labels = []
+        
+        # Reset form field after search is processed
+        form = RecipeSearchForm(initial={'chart_type': chart_type})
+
+     # Reset form field after search is processed
+
 
         for recipe in qs:
             image_tag = f'<img src="{recipe.pic.url}" alt="{recipe.name}" height="60">'
@@ -69,11 +75,8 @@ def records(request):
         df = pd.DataFrame(data)
         recipes_df = df.to_html(escape=False)
 
-        if chart_type:
-            chart_data = get_chart(chart_type, df, labels=labels)
-            chart = f"data:image/png;base64,{chart_data}" 
-            print("Chart base64 starts with:", chart[:30]) 
- 
+        # Generates the chart:
+        chart = get_chart(chart_type or '#1', df, labels=labels)
 
     context = {
         'form': form,

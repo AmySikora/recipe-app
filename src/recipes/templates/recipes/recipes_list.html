@@ -18,7 +18,7 @@
     .recipe-card {
         background: white;
         padding: 15px;
-        width: 270px;  /* Slightly bigger for better layout */
+        width: 270px;
         border-radius: 12px;
         box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.15);
         text-align: center;
@@ -32,7 +32,7 @@
 
     .recipe-card img {
         width: 100%;
-        height: 160px;  /* Slightly bigger for better visuals */
+        height: 160px;
         object-fit: cover;
         border-radius: 8px;
     }
@@ -61,6 +61,28 @@
         transform: scale(1.1);
         box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
     }
+
+    .search-button {
+        display: inline-block;
+        background-color: #ff9800;
+        color: white;
+        padding: 12px 24px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 16px;
+        font-weight: bold;
+        transition: background-color 0.3s ease-in-out, transform 0.2s ease;
+        margin: 40px auto 0;
+    }
+
+    .search-button:hover {
+        background-color: #e68900;
+        transform: scale(1.05);
+    }
+
+    .search-container {
+        text-align: center;
+    }
 </style>
 
 <div class="recipe-container">
@@ -72,10 +94,14 @@
             <img src="{% static 'recipes/images/default.jpg' %}" alt="No image available">
         {% endif %}
         <h3>{{ recipe.name }}</h3>
-        <a href="{% url 'recipes:recipe_detail' recipe.pk %}" class="btn">View Details</a>
+        <a href="{% url 'recipes:recipe_detail' recipe.pk %}">View Details</a>
     </div>
     {% empty %}
         <p>No recipes available.</p>
     {% endfor %}
+</div>
+
+<div class="search-container">
+    <a href="{% url 'recipes:records' %}" class="search-button">🔍 Search Recipes</a>
 </div>
 {% endblock %}

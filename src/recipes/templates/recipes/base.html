@@ -1,102 +1,166 @@
-<!DOCTYPE html>
 {% load static %}
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>{% block title %}Recipe App{% endblock %}</title>
-    <link rel="icon" type="image/x-icon" href="{% static 'icons/favicon.ico' %}">
-    <style>
-        /* your styles here */
+  <meta charset="UTF-8">
+  <title>{% block title %}Recipe App{% endblock %}</title>
+  <link rel="icon" type="image/x-icon" href="{% static 'icons/favicon.ico' %}">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f8f8;
+      margin: 0;
+      padding-top: 80px;
+    }
+  
+    .navbar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #333;
+      padding: 10px 20px;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+  
+    .nav-left,
+    .nav-center,
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+      padding-right: 25px; 
+    }
 
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f8f8;
-            margin: 0;
-            padding: 0;
-            padding-top: 80px; /* Push content below the fixed navbar */
-        }
+    .nav-center {
+      flex: 1;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+  
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: bold;
+      padding: 6px 10px;
+    }
+  
+    .navbar a:hover {
+      background-color: #ff9800;
+      border-radius: 5px;
+    }
+  
+    .logo {
+      max-height: 36px;
+    }
+  
+    .search-form {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-wrap: nowrap;
+    }
+  
+    .search-form input[type="text"] {
+      padding: 5px 8px;
+      border-radius: 5px;
+      border: none;
+      font-size: 14px;
+      width: 110px;
+      max-width: 110px;
+    }
+  
+    .search-form button {
+      padding: 5px 8px;
+      background-color: #ff9800;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  
+    .search-form button:hover {
+      background-color: #e68900;
+    }
+  
+    .content {
+      padding: 30px 50px;
+      max-width: 1200px;
+      margin: 0 auto;
+      text-align: center;
+    }
+  
+    /* Responsive tweak */
+    @media (max-width: 768px) {
+      .nav-center,
+      .nav-right {
+        justify-content: center;
+        margin-top: 10px;
+      }
+  
+      .search-form input[type="text"] {
+        width: 90px;
+      }
 
-        .navbar {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background-color: #333;
-            padding: 10px 0;
-            text-align: center;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-            z-index: 1000;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .navbar a {
-            color: #fff;
-            text-decoration: none;
-            padding: 12px 20px;
-            font-size: 18px;
-            display: inline-block;
-            font-weight: bold;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-        }
-
-        .navbar a:hover {
-            background-color: #ff9800;
-            border-radius: 5px;
-        }
-
-        .logo-container {
-            display: flex;
-            align-items: center;
-        }
-
-        .logo {
-            max-height: 40px;
-            margin-right: 15px;
-        }
-
-        .auth-links {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .content {
-            padding: 20px;
-            text-align: center;
-        }
-    </style>
+      .search-form button {
+        font-size: 12px;
+        padding: 15px;
+  }
+  
+      .navbar a {
+        font-size: 14px;
+        padding: 5px 8px;
+      }
+    }
+  </style>
+  
 </head>
+
 <body>
 
-    <!-- Navbar -->
-    <div class="navbar">
-        <div class="logo-container">
-            <a href="{% url 'recipes:home' %}">
-                <img src="{% static 'recipes/images/logo.png' %}" alt="Recipe App Logo" class="logo">
-            </a>
-            <a href="{% url 'recipes:home' %}">Home</a>
-        </div>
-        <div>
-            <a href="{% url 'recipes:recipe_list' %}">Recipes</a>
-            <a href="{% url 'recipes:records' %}">Search</a>
-            <a href="{% url 'recipes:records' %}">Charts</a>  
-        </div>
-        
-        <div class="auth-links">
-            {% if user.is_authenticated %}
-                <a href="{% url 'logout' %}">Logout</a>
-            {% else %}
-                <a href="{% url 'login' %}">Login</a>
-            {% endif %}
-        </div>
+  <div class="navbar">
+    <!-- Left: Logo -->
+    <div class="nav-left">
+      <a href="{% url 'recipes:home' %}">
+        <img src="{% static 'recipes/images/logo.png' %}" alt="Logo" class="logo">
+      </a>
     </div>
 
-    <!-- Page Content Block -->
-    <div class="content">
-        {% block content %}{% endblock %}
+    <!-- Center: Nav links -->
+    <div class="nav-center">
+      <a href="{% url 'recipes:home' %}">Home</a>
+      <a href="{% url 'recipes:recipe_list' %}">Recipes</a>
+      <a href="{% url 'recipes:records' %}">Charts</a>
+      <a href="{% url 'recipes:records' %}">Profile</a>
     </div>
+
+    <!-- Right: Logout/Login + Search -->
+    <div class="nav-right">
+      {% if user.is_authenticated %}
+        <a href="{% url 'logout' %}">Logout</a>
+      {% else %}
+        <a href="{% url 'login' %}">Login</a>
+      {% endif %}
+
+      <form action="{% url 'recipes:records' %}" method="post" class="search-form">
+        {% csrf_token %}
+        <input type="text" name="search_term" placeholder="Search recipes...">
+        <button type="submit">🔍</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="content">
+    {% block content %}{% endblock %}
+  </div>
 
 </body>
 </html>

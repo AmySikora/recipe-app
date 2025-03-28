@@ -1,194 +1,141 @@
 {% extends 'recipes/base.html' %}
-{% load static %}
 {% block title %}Search Recipes{% endblock %}
 
 {% block content %}
 <style>
-    .container {
-        max-width: 800px;
-        margin: 40px auto;
-        padding: 30px;
-        background-color: #fffaf0;
-        border-radius: 12px;
-        box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.1);
-        font-family: Arial, sans-serif;
-    }
+  .search-container {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 16px;
+    box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+  }
 
-    h1, h2 {
-        color: #ff9800;
-        text-align: center;
-        margin-bottom: 20px;
-    }
+  h1, h2 {
+    text-align: center;
+    color: #090909;
+    margin-bottom: 20px;
+  }
 
-    form {
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-        margin-bottom: 30px;
-        align-items: center;
-    }
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 30px;
+  }
 
-    form > p {
-        width: 100%;
-        max-width: 500px;
-    }
+  input[type="text"], select {
+    padding: 12px;
+    width: 100%;
+    max-width: 480px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    box-shadow: inset 1px 1px 3px rgba(0,0,0,0.05);
+  }
 
-    input[type="text"] {
-        padding: 10px;
-        border-radius: 5px;
-        border: 1px solid #ccc;
-        font-size: 16px;
-        width: 100%;
-        max-width: 500px;
-    }
+  button {
+    padding: 12px 24px;
+    background-color: #ff9800;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+  }
 
-    .chart-icon-group {
-        display: flex;
-        justify-content: center;
-        gap: 25px;
-    }
+  button:hover {
+    background-color: #e68900;
+    transform: scale(1.05);
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+  }
 
-    .chart-icon-wrapper {
-        text-align: center;
-        font-size: 14px;
-        color: #444;
-    }
+  .result-table {
+    overflow-x: auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 2px 2px 10px rgba(0,0,0,0.08);
+    margin-top: 20px;
+  }
 
-    .chart-icon {
-        width: 70px;
-        height: 70px;
-        object-fit: contain;
-        cursor: pointer;
-        transition: all 0.25s ease-in-out;
-        padding: 8px;
-        background-color: #fff;
-        border-radius: 10px;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
 
-    .chart-icon:hover {
-        transform: scale(1.1);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    }
+  th, td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+  }
 
-    .chart-icon.selected {
-        border: 3px solid #ff9800;
-        box-shadow: 0 0 10px rgba(255, 152, 0, 0.5);
-    }
+  th {
+    background-color: #ffebcc;
+    font-weight: bold;
+    color: #333;
+  }
 
-    button {
-        margin-top: 10px;
-        padding: 10px 20px;
-        background-color: #ff9800;
-        color: white;
-        font-size: 16px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-    }
+  td img {
+    max-height: 60px;
+    border-radius: 6px;
+    object-fit: cover;
+  }
 
-    button:hover {
-        background-color: #e68900;
-    }
+  .chart {
+    text-align: center;
+    margin-top: 40px;
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 2px 2px 12px rgba(0,0,0,0.1);
+  }
 
-    .result-table {
-        overflow-x: auto;
-        margin-bottom: 40px;
-    }
+  .chart img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+  }
 
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 20px;
-    }
-
-    th, td {
-        border: 1px solid #ccc;
-        padding: 10px;
-        text-align: left;
-    }
-
-    th {
-        background-color: #ffebcc;
-        color: #333;
-    }
-
-    td img {
-        max-height: 60px;
-        border-radius: 6px;
-        object-fit: cover;
-    }
-
-    .chart {
-        text-align: center;
-        margin-top: 30px;
-    }
-
-    .no-data {
-        text-align: center;
-        font-size: 18px;
-        color: #888;
-    }
+  .no-data {
+    text-align: center;
+    font-size: 18px;
+    color: #888;
+    margin-top: 30px;
+  }
 </style>
 
-<div class="container">
-    <h1>Search by Recipe Name or Ingredient</h1>
+<div class="search-container">
+  <h1>Search by Recipe Name or Ingredient</h1>
 
-    <form method="POST" id="search-form">
-        {% csrf_token %}
-        {{ form.search_term.label_tag }}
-        {{ form.search_term }}
+  <form method="POST">
+    {% csrf_token %}
+    {{ form.search_term.label_tag }}
+    {{ form.search_term }}
 
-        <input type="hidden" name="chart_type" id="chart-type" value="{{ form.chart_type.value|default_if_none:'' }}">
+    <button type="submit">Search</button>
+  </form>
 
-        <div class="chart-icon-group">
-            <div class="chart-icon-wrapper">
-                <img src="{% static 'icons/bar-chart.png' %}" alt="Bar Chart" class="chart-icon {% if form.chart_type.value == '#1' %}selected{% endif %}" data-chart="#1">
-                <div>Bar</div>
-            </div>
-            <div class="chart-icon-wrapper">
-                <img src="{% static 'icons/pie-chart.png' %}" alt="Pie Chart" class="chart-icon {% if form.chart_type.value == '#2' %}selected{% endif %}" data-chart="#2">
-                <div>Pie</div>
-            </div>
-            <div class="chart-icon-wrapper">
-                <img src="{% static 'icons/line-graph.png' %}" alt="Line Chart" class="chart-icon {% if form.chart_type.value == '#3' %}selected{% endif %}" data-chart="#3">
-                <div>Line</div>
-            </div>
-        </div>
-
-        <button type="submit">🔍 Search</button>
-    </form>
-
-    {% if recipes_df %}
-        <h2>Results:</h2>
-        <div class="result-table">
-            {{ recipes_df|safe }}
-        </div>
-    {% endif %}
+  {% if recipes_df %}
+    <h2>Results:</h2>
+    <div class="result-table">
+      {{ recipes_df|safe }}
+    </div>
 
     {% if chart %}
-  <div class="chart">
-      <h2>Chart Visualization:</h2>
-      <img src="{{ chart }}" alt="Chart">
-  </div>
-{% endif %}
-
+      <div class="chart">
+        <h2>Chart Visualization:</h2>
+        <img src="data:image/png;base64,{{ chart|safe }}" alt="Chart">
+      </div>
+    {% endif %}
+  {% else %}
+    <p class="no-data">No recipes found. Try another search.</p>
+  {% endif %}
 </div>
 {% endblock %}
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const icons = document.querySelectorAll('.chart-icon');
-        const chartTypeInput = document.getElementById('chart-type');
-        const form = document.getElementById('search-form');
-
-        icons.forEach(icon => {
-            icon.addEventListener('click', () => {
-                icons.forEach(i => i.classList.remove('selected'));
-                icon.classList.add('selected');
-                chartTypeInput.value = icon.dataset.chart;
-                form.submit();
-            });
-        });
-    });
-</script>
