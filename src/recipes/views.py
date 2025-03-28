@@ -11,6 +11,7 @@ import pandas as pd
 from django.urls import reverse
 from .utils import get_chart
 from .forms import RecipeForm
+from django.contrib import messages
 
 class RecipeListView(LoginRequiredMixin, ListView):
     model = Recipe
@@ -103,13 +104,14 @@ def add_recipe(request):
         form = RecipeForm(request.POST, request.FILES)
         if form.is_valid():
             recipe = form.save(commit=False)
-            recipe.created_by = request.user  # If you track the author
+            recipe.created_by = request.user
             recipe.save()
-            form.save_m2m()  # Save many-to-many relationships like related_recipes
+            form.save_m2m()
+            messages.success(request, 'Recipe added successfully!')
             return redirect('recipes:recipe_detail', pk=recipe.pk)
     else:
         form = RecipeForm()
-    
+
     return render(request, 'recipes/add_recipe.html', {'form': form})
 
 def login_view(request):
