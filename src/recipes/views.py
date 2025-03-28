@@ -24,6 +24,7 @@ class RecipeDetailView(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         context['ingredients_list'] = self.object.ingredients.split(", ")
         context['instructions_list'] = self.object.instructions.split("\n")
+        context['related_recipes'] = self.object.related_recipes.all()
         return context
 
 def home(request):
@@ -54,7 +55,6 @@ def records(request):
         form = RecipeSearchForm(initial={'chart_type': chart_type})
 
      # Reset form field after search is processed
-
 
         for recipe in qs:
             image_tag = f'<img src="{recipe.pic.url}" alt="{recipe.name}" height="60">'

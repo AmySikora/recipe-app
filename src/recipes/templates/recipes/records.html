@@ -3,23 +3,28 @@
 
 {% block content %}
 <style>
+  html {
+    scroll-behavior: smooth;
+  }
+
   .search-container {
     max-width: 1100px;
     margin: 40px auto;
-    padding: 20px;
+    padding: 30px;
     background-color: white;
     border-radius: 16px;
     box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.1);
     font-family: Arial, sans-serif;
   }
 
-  h1, h2 {
+  .search-container h1,
+  .search-container h2 {
     text-align: center;
     color: #090909;
     margin-bottom: 20px;
   }
 
-  form {
+  .search-container form {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -27,17 +32,33 @@
     margin-bottom: 30px;
   }
 
-  input[type="text"], select {
-    padding: 12px;
+  .search-wrapper {
+    position: relative;
     width: 100%;
     max-width: 480px;
+  }
+
+  .search-wrapper input[type="text"] {
+    padding: 12px 12px 12px 40px;
+    width: 100%;
     font-size: 16px;
     border-radius: 8px;
     border: 1px solid #ccc;
     box-shadow: inset 1px 1px 3px rgba(0,0,0,0.05);
   }
 
-  button {
+  .search-wrapper::before {
+    content: "🔍";
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: #888;
+    pointer-events: none;
+  }
+
+  .jump-btn {
     padding: 12px 24px;
     background-color: #ff9800;
     color: white;
@@ -47,15 +68,18 @@
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.3s ease-in-out;
+    text-decoration: none;
+    display: inline-block;
+    margin: 10px auto;
   }
 
-  button:hover {
+  .jump-btn:hover {
     background-color: #e68900;
     transform: scale(1.05);
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
   }
 
-  .result-table {
+  .search-container .result-table {
     overflow-x: auto;
     background: #fff;
     padding: 20px;
@@ -64,46 +88,47 @@
     margin-top: 20px;
   }
 
-  table {
+  .search-container table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 10px;
   }
 
-  th, td {
+  .search-container th,
+  .search-container td {
     border: 1px solid #ddd;
     padding: 12px;
     text-align: left;
   }
 
-  th {
+  .search-container th {
     background-color: #ffebcc;
     font-weight: bold;
     color: #333;
   }
 
-  td img {
+  .search-container td img {
     max-height: 60px;
     border-radius: 6px;
     object-fit: cover;
   }
 
-  .chart {
+  .search-container .chart {
     text-align: center;
-    margin-top: 40px;
+    margin-top: 60px;
     background: white;
     padding: 20px;
     border-radius: 12px;
     box-shadow: 2px 2px 12px rgba(0,0,0,0.1);
   }
 
-  .chart img {
+  .search-container .chart img {
     max-width: 100%;
     height: auto;
     border-radius: 8px;
   }
 
-  .no-data {
+  .search-container .no-data {
     text-align: center;
     font-size: 18px;
     color: #888;
@@ -116,20 +141,26 @@
 
   <form method="POST">
     {% csrf_token %}
-    {{ form.search_term.label_tag }}
-    {{ form.search_term }}
-
-    <button type="submit">Search</button>
+    <div class="search-wrapper">
+      {{ form.search_term }}
+    </div>
   </form>
 
   {% if recipes_df %}
-    <h2>Results:</h2>
+    <h2>Search Results:</h2>
+
+    {% if chart %}
+      <div style="text-align: center;">
+        <a href="#chart-section" class="jump-btn">⬇ Jump to Charts</a>
+      </div>
+    {% endif %}
+
     <div class="result-table">
       {{ recipes_df|safe }}
     </div>
 
     {% if chart %}
-      <div class="chart">
+      <div class="chart" id="chart-section">
         <h2>Chart Visualization:</h2>
         <img src="data:image/png;base64,{{ chart|safe }}" alt="Chart">
       </div>

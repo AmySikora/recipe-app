@@ -62,24 +62,6 @@
         box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
     }
 
-    .search-button {
-        display: inline-block;
-        background-color: #ff9800;
-        color: white;
-        padding: 12px 24px;
-        border-radius: 6px;
-        text-decoration: none;
-        font-size: 16px;
-        font-weight: bold;
-        transition: background-color 0.3s ease-in-out, transform 0.2s ease;
-        margin: 40px auto 0;
-    }
-
-    .search-button:hover {
-        background-color: #e68900;
-        transform: scale(1.05);
-    }
-
     .search-container {
         text-align: center;
     }
@@ -101,7 +83,4 @@
     {% endfor %}
 </div>
 
-<div class="search-container">
-    <a href="{% url 'recipes:records' %}" class="search-button">🔍 Search Recipes</a>
-</div>
 {% endblock %}

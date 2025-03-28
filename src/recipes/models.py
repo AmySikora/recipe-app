@@ -10,6 +10,8 @@ class Recipe(models.Model):
     difficulty = models.CharField(max_length=20, blank=True, null=True) 
     pic = models.ImageField(upload_to='recipes', default='no_picture.jpg')
     instructions = models.TextField(help_text="Step-by-step cooking instructions", default="No instructions provided.")
+    related_recipes = models.ManyToManyField('self', blank=True)
+
     
     # determine recipe difficulty
     @property

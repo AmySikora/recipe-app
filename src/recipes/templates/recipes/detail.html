@@ -81,6 +81,18 @@
         background-color: #e68900;
         transform: scale(1.05);
     }
+
+    .section ul li a {
+    text-decoration: none;
+    color: #ff9800;
+    font-weight: bold;
+}
+
+    .section ul li a:hover {
+        text-decoration: underline;
+        color: #e68900;
+}
+
 </style>
 
 <div class="container">
@@ -113,6 +125,20 @@
             {% endfor %}
         </ol>
     </div>
+    {% if related_recipes %}
+    <div class="section" style="margin-top: 30px;">
+      <b>Pairs Well With:</b>
+      <ul>
+        {% for recipe in related_recipes %}
+          <li>
+            <a href="{% url 'recipes:recipe_detail' recipe.id %}">
+              {{ recipe.name }}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
     
     <div style="text-align: center;">
         <a href="{% url 'recipes:recipe_list' %}" class="btn">Back to Recipes</a>

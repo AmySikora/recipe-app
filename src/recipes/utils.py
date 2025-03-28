@@ -25,11 +25,20 @@ def get_chart(chart_type, data, **kwargs):
     axs[0].set_ylabel("Minutes")
     axs[0].tick_params(axis='x', rotation=45)
 
-    # Pie Chart
-    difficulty_counts = data['Difficulty'].value_counts()
-    axs[1].pie(difficulty_counts, labels=difficulty_counts.index, autopct='%1.1f%%')
-    axs[1].set_title("Difficulty")
+   # Pie Chart (with recipe names grouped by difficulty)
+    difficulty_labels = []
+    difficulty_values = []
 
+    for difficulty in data['Difficulty'].unique():
+        subset = data[data['Difficulty'] == difficulty]
+        names = subset['Name'].str.replace(r'<[^>]*>', '', regex=True).tolist()  # Remove HTML
+        label = f"{difficulty}: " + ", ".join(names)
+        difficulty_labels.append(label)
+        difficulty_values.append(len(subset))
+
+    axs[1].pie(difficulty_values, labels=difficulty_labels, autopct='%1.1f%%')
+    axs[1].set_title("Recipes by Difficulty")
+    
     # Line Chart
     sorted_data = data.copy()
     sorted_data['Name'] = sorted_data['Name'].str.replace(r'<[^>]*>', '', regex=True)  # Remove HTML

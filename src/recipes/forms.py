@@ -1,5 +1,11 @@
 from django import forms
 
+CHART_CHOICES = [
+    ('#1', 'Bar Chart'),
+    ('#2', 'Pie Chart'),
+    ('#3', 'Line Chart'),
+]
+
 class RecipeSearchForm(forms.Form):
     search_term = forms.CharField(
         max_length=120,
@@ -10,8 +16,8 @@ class RecipeSearchForm(forms.Form):
         })
     )
 
-    chart_type = forms.CharField(
-        max_length=10,
+    chart_type = forms.ChoiceField(
+        choices=CHART_CHOICES,
         required=False,
-        widget=forms.HiddenInput()
+        label="Chart Type"
     )
