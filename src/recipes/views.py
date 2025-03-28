@@ -67,8 +67,6 @@ def records(request):
         # Reset form field after search is processed
         form = RecipeSearchForm(initial={'chart_type': chart_type})
 
-     # Reset form field after search is processed
-
         for recipe in qs:
             image_tag = f'<img src="{recipe.pic.url}" alt="{recipe.name}" height="60">'
             link = f'<a href="{reverse("recipes:recipe_detail", args=[recipe.id])}">{recipe.name}</a>'
