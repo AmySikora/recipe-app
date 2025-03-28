@@ -10,6 +10,7 @@ from .forms import RecipeSearchForm
 import pandas as pd
 from django.urls import reverse
 from .utils import get_chart
+from .forms import RecipeForm
 
 class RecipeListView(LoginRequiredMixin, ListView):
     model = Recipe
@@ -96,6 +97,20 @@ def records(request):
     }
 
     return render(request, 'recipes/records.html', context)
+
+def add_recipe(request):
+    if request.method == 'POST':
+        form = RecipeForm(request.POST, request.FILES)
+        if form.is_valid():
+            recipe = form.save(commit=False)
+            recipe.created_by = request.user  # If you track the author
+            recipe.save()
+            form.save_m2m()  # Save many-to-many relationships like related_recipes
+            return redirect('recipes:recipe_detail', pk=recipe.pk)
+    else:
+        form = RecipeForm()
+    
+    return render(request, 'recipes/add_recipe.html', {'form': form})
 
 def login_view(request):
     if request.user.is_authenticated:

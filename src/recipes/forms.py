@@ -1,5 +1,5 @@
 from django import forms
-from .models import recipes
+from .models import Recipe
 
 CHART_CHOICES = [
     ('#1', 'Bar Chart'),
