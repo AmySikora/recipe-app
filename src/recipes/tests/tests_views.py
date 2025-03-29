@@ -1,7 +1,6 @@
 from django.test import TestCase
 from django.urls import reverse
 from recipes.models import Recipe
-
 from django.contrib.auth.models import User
 
 class RecipeViewsTest(TestCase):
@@ -48,3 +47,49 @@ class RecipeViewsTest(TestCase):
         # Test if requesting a non-existent recipe returns a 404 error
         response = self.client.get(reverse('recipes:recipe_detail', kwargs={'pk': 999}))
         self.assertEqual(response.status_code, 404)
+
+class SearchViewTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='testpass')
+        self.client.login(username='testuser', password='testpass')
+
+        # Add two recipes
+        Recipe.objects.create(
+            name="Grilled Cheese",
+            cooking_time=10,
+            ingredients="bread, cheese, butter",
+            description="A simple grilled cheese sandwich.",
+            instructions="Butter bread, add cheese, grill until golden."
+        )
+        Recipe.objects.create(
+            name="Spaghetti",
+            cooking_time=25,
+            ingredients="pasta, tomato sauce, basil",
+            description="Classic spaghetti with tomato sauce.",
+            instructions="Boil pasta, heat sauce, combine."
+        )
+
+    def test_search_page_loads(self):
+        response = self.client.get(reverse('recipes:search'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'recipes/search.html')
+        self.assertContains(response, "Find a Recipe")
+
+    def test_search_returns_all_recipes_when_blank(self):
+        response = self.client.get(reverse('recipes:search'))
+        self.assertContains(response, "Grilled Cheese")
+        self.assertContains(response, "Spaghetti")
+
+    def test_search_filters_recipes_by_name(self):
+        response = self.client.get(reverse('recipes:search'), {'search_term': 'cheese'})
+        self.assertContains(response, "Grilled Cheese")
+        self.assertNotContains(response, "Spaghetti")
+
+    def test_search_filters_recipes_by_ingredient(self):
+        response = self.client.get(reverse('recipes:search'), {'search_term': 'basil'})
+        self.assertContains(response, "Spaghetti")
+        self.assertNotContains(response, "Grilled Cheese")
+
+    def test_search_view_displays_no_results(self):
+        response = self.client.get(reverse('recipes:search'), {'search_term': 'sushi'})
+        self.assertContains(response, "No recipes found")
