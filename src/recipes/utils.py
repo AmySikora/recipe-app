@@ -2,6 +2,7 @@ from recipes.models import Recipe
 from io import BytesIO
 import base64
 import matplotlib.pyplot as plt
+import textwrap  # Required for label wrapping in pie chart
 
 def get_graph():
     buffer = BytesIO()
@@ -15,11 +16,12 @@ def get_graph():
 def get_chart(chart_type, data, **kwargs):
     plt.switch_backend('AGG')
     fig = plt.figure(figsize=(8, 6))
+
     labels = kwargs.get('labels', [])
     data['Ingredient Count'] = data['Ingredients'].apply(lambda x: len(x.split(',')))
 
     if chart_type == '#1':
-        # Bar Chart - Cooking Time
+        # Bar Chart - Cooking Time by Recipe
         plt.bar(labels, data['Cooking Time (min)'], color='skyblue')
         plt.title("Cooking Time by Recipe")
         plt.ylabel("Minutes")
@@ -34,16 +36,20 @@ def get_chart(chart_type, data, **kwargs):
         for difficulty in data['Difficulty'].unique():
             subset = data[data['Difficulty'] == difficulty]
             names = subset['Name'].str.replace(r'<[^>]*>', '', regex=True).tolist()
-            label = f"{difficulty}: " + ", ".join(names)
-            difficulty_labels.append(label)
+            full_label = f"{difficulty}: " + ", ".join(names)
+            wrapped_label = "\n".join(textwrap.wrap(full_label, width=25))
+
+            difficulty_labels.append(wrapped_label)
             difficulty_values.append(len(subset))
 
         plt.pie(
             difficulty_values,
             labels=difficulty_labels,
             autopct='%1.1f%%',
-            startangle=90,
-            textprops={'fontsize': 9}
+            textprops={'fontsize': 9},
+            startangle=90,              
+            pctdistance=0.8,            
+            labeldistance=1.2            
         )
         plt.title("Recipes by Difficulty")
 
