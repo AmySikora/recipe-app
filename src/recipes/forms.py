@@ -19,7 +19,7 @@ class RecipeSearchForm(forms.Form):
 
     chart_type = forms.ChoiceField(
             choices=CHART_CHOICES,
-            required=False,
+            required=True,
             label="Chart Type"
         )
     

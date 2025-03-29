@@ -18,9 +18,22 @@
       font-family: Arial, sans-serif;
       text-align: center;
     }
+
+    .search-page h1 {
+      font-size: 28px;
+      margin-bottom: 5px;
+    }
+
+    .search-page .subtext {
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 25px;
+    }
+
     .search-wrapper-combined {
       display: flex;
-      align-items: stretch; 
+      align-items: stretch;
+      justify-content: center;
       max-width: 400px;
       width: 100%;
     }
@@ -32,7 +45,7 @@
       border-radius: 8px 0 0 8px;
       width: 100%;
       box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.05);
-      height: 44px; 
+      height: 44px;
       box-sizing: border-box;
     }
 
@@ -46,7 +59,7 @@
       cursor: pointer;
       padding: 0 16px;
       transition: 0.3s;
-      height: 44px; 
+      height: 44px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -57,69 +70,7 @@
       transform: scale(1.05);
     }
 
-    .search-page h1 {
-      font-size: 28px;
-      margin-bottom: 5px;
-    }
-
-    .search-page .subtext {
-      color: #666;
-      font-size: 14px;
-      margin-bottom: 25px;
-    }
-
-    .search-page form {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .search-page .search-wrapper {
-      position: relative;
-      width: 100%;
-      max-width: 400px;
-    }
-
-    .search-page .search-wrapper input[type="text"] {
-      padding: 12px 12px 12px 40px;
-      width: 100%;
-      font-size: 16px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.05);
-    }
-
-    .search-page .search-wrapper::before {
-      content: "🔍";
-      position: absolute;
-      left: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 18px;
-      color: #888;
-      pointer-events: none;
-    }
-
-    .search-page .submit-btn {
-      margin-top: 10px;
-      padding: 10px 20px;
-      background-color: #4caf50;
-      color: white;
-      font-size: 16px;
-      font-weight: bold;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    .search-page .submit-btn:hover {
-      background-color: #3e8e41;
-      transform: scale(1.05);
-    }
-
-    .search-page .view-charts-btn {
+    .view-charts-btn {
       margin-top: 20px;
       padding: 10px 20px;
       background-color: #ff9800;
@@ -132,12 +83,12 @@
       display: inline-block;
     }
 
-    .search-page .view-charts-btn:hover {
+    .view-charts-btn:hover {
       background-color: #e68900;
       transform: scale(1.05);
     }
 
-    .search-page .result-table {
+    .result-table {
       overflow-x: auto;
       background: #fff;
       padding: 20px;
@@ -147,30 +98,29 @@
       text-align: left;
     }
 
-    .search-page table {
+    table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 10px;
     }
 
-    .search-page th,
-    .search-page td {
+    th, td {
       border: 1px solid #ddd;
       padding: 12px;
     }
 
-    .search-page th {
+    th {
       background-color: #ffebcc;
       font-weight: bold;
     }
 
-    .search-page td img {
+    td img {
       max-height: 60px;
       border-radius: 6px;
       object-fit: cover;
     }
 
-    .search-page .no-data {
+    .no-data {
       font-size: 18px;
       color: #888;
       margin-top: 30px;
@@ -184,20 +134,20 @@
     <form method="GET" action="{% url 'recipes:search' %}">
       <div class="search-wrapper-combined">
         {{ form.search_term }}
-        <button type="submit" class="search-icon-btn" title="Search">🔍</button>
-      </div>      
+        <button type="submit" class="search-icon-btn" title="Search" aria-label="Search">🔍</button>
+      </div>
     </form>
 
-    {% if recipes_df %}
-      <h2>Search Results:</h2>
-      <a href="{% url 'recipes:charts' %}?search_term={{ request.GET.search_term }}" class="view-charts-btn">📊 View Charts</a>
+    {% if has_results %}
+    <h2>Search Results:</h2>
+    <a href="{% url 'recipes:charts' %}" class="view-charts-btn">📊 View Charts</a>
+    <div class="result-table">
+      {{ recipes_df|safe }}
+    </div>
+  {% else %}
+    <p class="no-data">No recipes found. Try another search.</p>
+  {% endif %}  
 
-      <div class="result-table">
-        {{ recipes_df|safe }}
-      </div>
-    {% else %}
-      <p class="no-data">No recipes found. Try another search.</p>
-    {% endif %}
   </div>
 </div>
 {% endblock %}

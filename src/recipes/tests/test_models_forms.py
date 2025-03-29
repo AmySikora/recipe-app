@@ -40,13 +40,13 @@ class RecipeSearchFormTest(TestCase):
             'chart_type': '#1'  # Must match value from CHART_CHOICES
         }
         form = RecipeSearchForm(data=form_data)
-        self.assertFalse(form.is_valid())
+        self.assertTrue(form.is_valid())
 
     def test_blank_form_data(self):
     # Test that form is invalid if chart_type is not selected (it's required)
         form = RecipeSearchForm(data={})
-        self.assertTrue(form.is_valid())  # <-- Was assertFalse
-
+        self.assertFalse(form.is_valid())  
+        self.assertIn('chart_type', form.errors)
 
     def test_invalid_chart_type(self):
         # Test if the form rejects an invalid chart type

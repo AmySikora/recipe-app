@@ -4,14 +4,13 @@ from .models import Recipe
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth.forms import UserCreationForm
-from .forms import RecipeSearchForm 
-import pandas as pd
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from .forms import RecipeSearchForm, RecipeForm
+from django.contrib import messages
+from django.db.models import Q
 from django.urls import reverse
 from .utils import get_chart
-from .forms import RecipeForm
-from django.contrib import messages
+import pandas as pd
 
 class RecipeListView(LoginRequiredMixin, ListView):
     model = Recipe
@@ -38,11 +37,10 @@ def signup_view(request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user)  
-            return redirect('recipes:recipe_list') 
+            login(request, user)
+            return redirect('recipes:recipe_list')
     else:
         form = UserCreationForm()
-    
     return render(request, 'auth/signup.html', {'form': form})
 
 def about(request):
@@ -80,28 +78,28 @@ def charts_view(request):
         'chart_type': chart_type
     })
 
+@login_required(login_url='/login/')
 def search_view(request):
-    form = RecipeSearchForm(request.POST or None)
+    form = RecipeSearchForm(request.GET or None)
     recipes_df = None
+    recipes_df_raw = None
     chart = None
-    chart_type = None
-    search_term = ''
+    has_results = False
 
-    if request.method == 'POST' and form.is_valid():
-        search_term = form.cleaned_data.get('search_term')
-        chart_type = form.cleaned_data.get('chart_type')
+    search_term = request.GET.get('search_term', '')
+    chart_type = request.GET.get('chart_type', '#1')
 
     qs = Recipe.objects.all()
 
     if search_term:
-        qs = qs.filter(name__icontains=search_term) | qs.filter(ingredients__icontains=search_term)
+        qs = qs.filter(
+            Q(name__icontains=search_term) |
+            Q(ingredients__icontains=search_term)
+        )
 
     if qs.exists():
         data = []
         labels = []
-        
-        # Reset form field after search is processed
-        form = RecipeSearchForm(initial={'chart_type': chart_type})
 
         for recipe in qs:
             image_tag = f'<img src="{recipe.pic.url}" alt="{recipe.name}" height="60">'
@@ -121,14 +119,16 @@ def search_view(request):
 
         df = pd.DataFrame(data)
         recipes_df = df.to_html(escape=False)
-
-        # Generates the chart:
-        chart = get_chart(chart_type or '#1', df, labels=labels)
+        recipes_df_raw = df
+        has_results = not df.empty
+        chart = get_chart(chart_type, df, labels=labels)
 
     context = {
         'form': form,
         'recipes_df': recipes_df,
-        'chart': chart
+        'recipes_df_raw': recipes_df_raw,
+        'chart': chart,
+        'has_results': has_results
     }
 
     return render(request, 'recipes/search.html', context)
@@ -145,7 +145,6 @@ def add_recipe(request):
             return redirect('recipes:recipe_detail', pk=recipe.pk)
     else:
         form = RecipeForm()
-
     return render(request, 'recipes/add_recipe.html', {'form': form})
 
 def login_view(request):
