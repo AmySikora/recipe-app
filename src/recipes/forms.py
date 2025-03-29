@@ -17,17 +17,19 @@ class RecipeSearchForm(forms.Form):
         })
     )
 
+    chart_type = forms.ChoiceField(
+            choices=CHART_CHOICES,
+            required=False,
+            label="Chart Type"
+        )
+    
 class RecipeForm(forms.ModelForm):
     class Meta:
         model = Recipe
-        fields = ['name', 'description', 'ingredients', 'instructions', 'cooking_time', 'pic', 'related_recipes']
+        fields = ['name', 'description', 'ingredients', 'instructions', 'cooking_time', 'pic']
         widgets = {
             'instructions': forms.Textarea(attrs={'rows': 4}),
             'ingredients': forms.Textarea(attrs={'rows': 3}),
         }
 
-    chart_type = forms.ChoiceField(
-        choices=CHART_CHOICES,
-        required=False,
-        label="Chart Type"
-    )
+    

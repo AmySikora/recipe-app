@@ -98,6 +98,25 @@
         {% endfor %}
 
         <button type="submit" class="btn">Submit Recipe</button>
+        <img id="preview" style="max-width: 300px; margin-top: 10px; display: none;" />
+
+<script>
+  const fileInput = document.querySelector('input[type="file"]');
+  const preview = document.getElementById('preview');
+
+  fileInput.addEventListener('change', () => {
+    const file = fileInput.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = e => {
+        preview.src = e.target.result;
+        preview.style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+</script>
+
     </form>
 
     <div class="back-link">
