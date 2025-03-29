@@ -49,7 +49,7 @@ def signup_view(request):
 def charts_view(request):
     return render(request, 'recipes/charts.html')
 
-def records(request):
+def search_view(request):
     form = RecipeSearchForm(request.POST or None)
     recipes_df = None
     chart = None
@@ -100,7 +100,7 @@ def records(request):
         'chart': chart
     }
 
-    return render(request, 'recipes/records.html', context)
+    return render(request, 'recipes/search_view.html', context)
 
 def add_recipe(request):
     if request.method == 'POST':
