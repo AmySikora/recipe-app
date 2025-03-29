@@ -4,59 +4,96 @@
 {% block content %}
 <style>
   .charts-container {
-    max-width: 1200px;
+    max-width: 900px;
     margin: 40px auto;
-    padding: 20px;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 30px;
-  }
-
-  .chart-card {
+    padding: 30px;
     background-color: white;
     border-radius: 16px;
-    box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1);
-    padding: 20px;
+    box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
     text-align: center;
   }
 
-  .chart-card h2 {
-    color: #ff9800;
+  .chart-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+
+  .chart-buttons button {
+    font-size: 32px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+
+  .chart-buttons button:hover {
+    transform: scale(1.2);
+  }
+
+  .chart-card {
+    background-color: #f9f9f9;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 2px 2px 10px rgba(0,0,0,0.05);
+  }
+
+  .chart-title {
     font-size: 22px;
-    margin-bottom: 5px;
+    color: #ff9800;
+    font-weight: bold;
+    margin-bottom: 8px;
   }
 
-  .chart-card p.caption {
-    color: #666;
-    font-size: 14px;
-    margin-bottom: 15px;
+  .chart-caption {
+    color: #555;
+    margin-bottom: 20px;
+    font-size: 15px;
   }
 
-  .chart-card img {
+  .chart-img {
     max-width: 100%;
-    height: auto;
     border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   }
 </style>
 
 <div class="charts-container">
-  <div class="chart-card">
-    <h2>📊 Cooking Time Comparison</h2>
-    <p class="caption">This bar chart compares the cooking time of all recipes.</p>
-    <img src="data:image/png;base64,{{ bar_chart|safe }}" alt="Bar Chart of Cooking Times">
-  </div>
+  <h1>📊 Explore Recipe Charts</h1>
+  <p>Select a chart below to view data for all recipes:</p>
 
-  <div class="chart-card">
-    <h2>🥧 Recipes by Difficulty</h2>
-    <p class="caption">This pie chart shows how many recipes fall into each difficulty level.</p>
-    <img src="data:image/png;base64,{{ pie_chart|safe }}" alt="Pie Chart of Difficulties">
-  </div>
+  <form method="POST">
+    {% csrf_token %}
+    <input type="hidden" name="chart_type" id="chart-type-input">
 
-  <div class="chart-card">
-    <h2>📈 Ingredient Count per Recipe</h2>
-    <p class="caption">This line chart displays how many ingredients are used in each recipe.</p>
-    <img src="data:image/png;base64,{{ line_chart|safe }}" alt="Line Chart of Ingredient Counts">
-  </div>
+    <div class="chart-buttons">
+      <button type="submit" onclick="selectChart('#1')" title="Bar Chart">📊</button>
+      <button type="submit" onclick="selectChart('#2')" title="Pie Chart">🥧</button>
+      <button type="submit" onclick="selectChart('#3')" title="Line Chart">📈</button>
+    </div>
+  </form>
+
+  <script>
+    function selectChart(type) {
+      document.getElementById('chart-type-input').value = type;
+    }
+  </script>
+
+  {% if chart %}
+    <div class="chart-card">
+      {% if chart_type == '#1' %}
+        <div class="chart-title">📊 Cooking Time Comparison</div>
+        <p class="chart-caption">This bar chart compares the cooking time of all recipes.</p>
+      {% elif chart_type == '#2' %}
+        <div class="chart-title">🥧 Recipes by Difficulty</div>
+        <p class="chart-caption">This pie chart shows how many recipes fall into each difficulty level.</p>
+      {% elif chart_type == '#3' %}
+        <div class="chart-title">📈 Ingredient Count per Recipe</div>
+        <p class="chart-caption">This line chart displays how many ingredients are used in each recipe.</p>
+      {% endif %}
+      <img src="data:image/png;base64,{{ chart|safe }}" alt="Chart" class="chart-img">
+    </div>
+  {% endif %}
 </div>
 {% endblock %}
