@@ -45,6 +45,9 @@ def signup_view(request):
     
     return render(request, 'auth/signup.html', {'form': form})
 
+def about(request):
+    return render(request, 'recipes/about.html')
+
 @login_required(login_url='/login/')
 def charts_view(request):
     qs = Recipe.objects.all()
