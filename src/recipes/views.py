@@ -47,7 +47,34 @@ def signup_view(request):
 
 @login_required(login_url='/login/')
 def charts_view(request):
-    return render(request, 'recipes/charts.html')
+    qs = Recipe.objects.all()
+
+    if not qs.exists():
+        return render(request, 'recipes/charts.html', {
+            'message': 'No recipes available to generate charts.'
+        })
+
+    data = []
+    labels = []
+
+    for recipe in qs:
+        labels.append(recipe.name)
+        ingredient_count = len(recipe.ingredients.split(','))
+        data.append({
+            'Name': recipe.name,
+            'Ingredients': recipe.ingredients,
+            'Ingredient Count': ingredient_count,
+            'Cooking Time (min)': recipe.cooking_time,
+            'Difficulty': recipe.difficulty
+        })
+
+    df = pd.DataFrame(data)
+    chart = get_chart('#1', df, labels=labels)
+
+    return render(request, 'recipes/charts.html', {
+        'chart': chart,
+        'recipe_count': len(data)
+    })
 
 def search_view(request):
     form = RecipeSearchForm(request.POST or None)
