@@ -5,59 +5,72 @@
 
 {% block content %}
 <style>
-    .about-simple {
+    .about-recipe {
         max-width: 700px;
         margin: 60px auto;
         text-align: center;
-        padding: 20px;
         font-family: 'Ubuntu', sans-serif;
         color: #333;
+        padding: 0 20px;
     }
 
-    .about-simple img {
-        max-width: 150px;
+    .about-recipe img {
+        width: 150px;
+        height: auto;
+        border-radius: 50%;
         margin-bottom: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
-    .about-simple h1 {
+    .about-recipe h1 {
         font-size: 28px;
-        margin-bottom: 12px;
+        margin-bottom: 16px;
     }
 
-    .about-simple p {
+    .about-recipe p {
         font-size: 18px;
-        line-height: 1.5;
+        line-height: 1.6;
         margin-bottom: 24px;
     }
 
-    .portfolio-link {
-        display: inline-block;
+    .link-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 16px;
+        margin-top: 20px;
+    }
+
+    .link-buttons a {
         background-color: #ff9800;
         color: white;
         text-decoration: none;
-        padding: 12px 24px;
+        padding: 12px 20px;
         border-radius: 6px;
-        font-weight: bold;
+        font-weight: 600;
         transition: background-color 0.3s ease;
     }
 
-    .portfolio-link:hover {
+    .link-buttons a:hover {
         background-color: #e68900;
     }
 </style>
 
-<div class="about-simple">
-    <img src="{% static 'recipes/images/Firebird-removebg-preview.png' %}" alt="Phoenix bird logo">
-    <h1>Hello, I’m Amy 👋</h1>
+<div class="about-recipe">
+    <img src="{% static 'recipes/images/my-image.JPG' %}" alt="Portrait of Amy Sikora">
+    <h1>Hi, I'm Amy Sikora</h1>
     <p>
-        I created this Recipe App as part of my journey into web development.
-        It lets users search, add, and explore recipes using smart features like difficulty ratings and data visualizations.
+        I'm a web developer with a background in higher education and student services. I created this Recipe App as part of my full-stack journey to build user-friendly, dynamic applications using Django.
     </p>
     <p>
-        Want to see more of my work?
+        Want to see more of my work or connect? Check out the links below.
     </p>
-    <a href="https://amysikora.github.io/portfolio-website/" target="_blank" class="portfolio-link">
-        Visit My Portfolio
-    </a>
+
+    <div class="link-buttons">
+        <a href="https://amysikora.github.io/portfolio-website/" target="_blank">🌐 Portfolio</a>
+        <a href="https://github.com/AmySikora" target="_blank">🐙 GitHub</a>
+        <a href="https://www.linkedin.com/in/amy-sikora-freelance/" target="_blank">🔗 LinkedIn</a>
+        <a href="mailto:amy.sikora77@gmail.com">✉️ Email Me</a>
+    </div>
 </div>
 {% endblock %}
