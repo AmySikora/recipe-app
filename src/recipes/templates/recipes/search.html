@@ -18,6 +18,44 @@
       font-family: Arial, sans-serif;
       text-align: center;
     }
+    .search-wrapper-combined {
+      display: flex;
+      align-items: stretch; 
+      max-width: 400px;
+      width: 100%;
+    }
+
+    .search-wrapper-combined input[type="text"] {
+      padding: 12px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px 0 0 8px;
+      width: 100%;
+      box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.05);
+      height: 44px; 
+      box-sizing: border-box;
+    }
+
+    .search-icon-btn {
+      background-color: #ff9800;
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+      border: none;
+      border-radius: 0 8px 8px 0;
+      cursor: pointer;
+      padding: 0 16px;
+      transition: 0.3s;
+      height: 44px; 
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .search-icon-btn:hover {
+      background-color: #e68900;
+      transform: scale(1.05);
+    }
 
     .search-page h1 {
       font-size: 28px;
@@ -49,7 +87,7 @@
       font-size: 16px;
       border-radius: 8px;
       border: 1px solid #ccc;
-      box-shadow: inset 1px 1px 3px rgba(0,0,0,0.05);
+      box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.05);
     }
 
     .search-page .search-wrapper::before {
@@ -63,6 +101,24 @@
       pointer-events: none;
     }
 
+    .search-page .submit-btn {
+      margin-top: 10px;
+      padding: 10px 20px;
+      background-color: #4caf50;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .search-page .submit-btn:hover {
+      background-color: #3e8e41;
+      transform: scale(1.05);
+    }
+
     .search-page .view-charts-btn {
       margin-top: 20px;
       padding: 10px 20px;
@@ -73,6 +129,7 @@
       text-decoration: none;
       border-radius: 8px;
       transition: 0.3s;
+      display: inline-block;
     }
 
     .search-page .view-charts-btn:hover {
@@ -85,7 +142,7 @@
       background: #fff;
       padding: 20px;
       border-radius: 12px;
-      box-shadow: 2px 2px 10px rgba(0,0,0,0.08);
+      box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.08);
       margin-top: 30px;
       text-align: left;
     }
@@ -124,16 +181,16 @@
     <h1>Find a Recipe</h1>
     <p class="subtext">Leave the search blank to view all recipes</p>
 
-    <form method="POST" action="{% url 'recipes:search' %}">
-      {% csrf_token %}
-      <div class="search-wrapper">
+    <form method="GET" action="{% url 'recipes:search' %}">
+      <div class="search-wrapper-combined">
         {{ form.search_term }}
-      </div>
+        <button type="submit" class="search-icon-btn" title="Search">🔍</button>
+      </div>      
     </form>
 
     {% if recipes_df %}
       <h2>Search Results:</h2>
-      <a href="{% url 'recipes:charts' %}" class="view-charts-btn">📊 View Charts</a>
+      <a href="{% url 'recipes:charts' %}?search_term={{ request.GET.search_term }}" class="view-charts-btn">📊 View Charts</a>
 
       <div class="result-table">
         {{ recipes_df|safe }}

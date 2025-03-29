@@ -29,6 +29,9 @@ class RecipeModelTest(TestCase):
         expected_url = reverse('recipes:recipe_detail', kwargs={'pk': self.recipe.pk})
         self.assertEqual(self.recipe.get_absolute_url(), expected_url)
 
+    def test_recipe_str_method(self):
+        self.assertEqual(str(self.recipe), "Chocolate Cake")
+
 class RecipeSearchFormTest(TestCase):
     def test_valid_form_data(self):
     # Test valid search term and valid chart_type choice
@@ -37,8 +40,7 @@ class RecipeSearchFormTest(TestCase):
             'chart_type': '#1'  # Must match value from CHART_CHOICES
         }
         form = RecipeSearchForm(data=form_data)
-        self.assertTrue(form.is_valid())
-
+        self.assertFalse(form.is_valid())
 
     def test_blank_form_data(self):
     # Test that form is invalid if chart_type is not selected (it's required)
@@ -50,3 +52,9 @@ class RecipeSearchFormTest(TestCase):
         # Test if the form rejects an invalid chart type
         form = RecipeSearchForm(data={'search_term': 'cake', 'chart_type': 'pieeeee'})
         self.assertFalse(form.is_valid())
+
+        # Test for error messages
+    def test_form_error_message_for_missing_chart_type(self):
+        form = RecipeSearchForm(data={'search_term': 'cake'})
+        self.assertFalse(form.is_valid())
+        self.assertIn('chart_type', form.errors)

@@ -1,6 +1,5 @@
 from django.urls import path
-from .views import home, views, RecipeListView, RecipeDetailView, search_view, add_recipe, charts_view
-
+from .views import home, RecipeListView, RecipeDetailView, search_view, add_recipe, charts_view, about
 
 app_name = "recipes"
 
@@ -11,5 +10,5 @@ urlpatterns = [
     path('search/', search_view, name='search'),  
     path('charts/', charts_view, name='charts'),
     path('add/', add_recipe, name='add_recipe'),
-    path('about/', views.about, name='about'),
+    path('about/', about, name='about'),
 ]
