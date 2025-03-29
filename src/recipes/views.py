@@ -46,6 +46,9 @@ def signup_view(request):
     return render(request, 'auth/signup.html', {'form': form})
 
 @login_required(login_url='/login/')
+def charts_view(request):
+    return render(request, 'recipes/charts.html')
+
 def records(request):
     form = RecipeSearchForm(request.POST or None)
     recipes_df = None
