@@ -1,5 +1,5 @@
 {% extends 'recipes/base.html' %}
-{% block title %}Search Recipes{% endblock %}
+{% block title %}Find a Recipe{% endblock %}
 
 {% block content %}
 <style>
@@ -8,34 +8,38 @@
   }
 
   .search-container {
-    max-width: 1100px;
+    max-width: 900px;
     margin: 40px auto;
     padding: 30px;
     background-color: white;
     border-radius: 16px;
     box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.1);
     font-family: Arial, sans-serif;
-  }
-
-  .search-container h1,
-  .search-container h2 {
     text-align: center;
-    color: #090909;
-    margin-bottom: 20px;
   }
 
-  .search-container form {
+  h1 {
+    font-size: 28px;
+    margin-bottom: 5px;
+  }
+
+  .subtext {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 25px;
+  }
+
+  form {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 15px;
-    margin-bottom: 30px;
+    gap: 10px;
   }
 
   .search-wrapper {
     position: relative;
     width: 100%;
-    max-width: 480px;
+    max-width: 400px;
   }
 
   .search-wrapper input[type="text"] {
@@ -58,78 +62,56 @@
     pointer-events: none;
   }
 
-  .jump-btn {
-    padding: 12px 24px;
+  .view-charts-btn {
+    margin-top: 20px;
+    padding: 10px 20px;
     background-color: #ff9800;
     color: white;
-    font-size: 16px;
     font-weight: bold;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease-in-out;
+    font-size: 16px;
     text-decoration: none;
-    display: inline-block;
-    margin: 10px auto;
+    border-radius: 8px;
+    transition: 0.3s;
   }
 
-  .jump-btn:hover {
+  .view-charts-btn:hover {
     background-color: #e68900;
     transform: scale(1.05);
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
   }
 
-  .search-container .result-table {
+  .result-table {
     overflow-x: auto;
     background: #fff;
     padding: 20px;
     border-radius: 12px;
     box-shadow: 2px 2px 10px rgba(0,0,0,0.08);
-    margin-top: 20px;
+    margin-top: 30px;
+    text-align: left;
   }
 
-  .search-container table {
+  table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 10px;
   }
 
-  .search-container th,
-  .search-container td {
+  th, td {
     border: 1px solid #ddd;
     padding: 12px;
-    text-align: left;
   }
 
-  .search-container th {
+  th {
     background-color: #ffebcc;
     font-weight: bold;
-    color: #333;
   }
 
-  .search-container td img {
+  td img {
     max-height: 60px;
     border-radius: 6px;
     object-fit: cover;
   }
 
-  .search-container .chart {
-    text-align: center;
-    margin-top: 60px;
-    background: white;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 2px 2px 12px rgba(0,0,0,0.1);
-  }
-
-  .search-container .chart img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 8px;
-  }
-
-  .search-container .no-data {
-    text-align: center;
+  .no-data {
     font-size: 18px;
     color: #888;
     margin-top: 30px;
@@ -137,7 +119,8 @@
 </style>
 
 <div class="search-container">
-  <h1>Search by Recipe Name or Ingredient</h1>
+  <h1>Find a Recipe</h1>
+  <p class="subtext">Leave the search blank to view all recipes</p>
 
   <form method="POST">
     {% csrf_token %}
@@ -148,23 +131,11 @@
 
   {% if recipes_df %}
     <h2>Search Results:</h2>
-
-    {% if chart %}
-      <div style="text-align: center;">
-        <a href="#chart-section" class="jump-btn">⬇ Jump to Charts</a>
-      </div>
-    {% endif %}
+    <a href="{% url 'recipes:charts' %}" class="view-charts-btn">📊 View Charts</a>
 
     <div class="result-table">
       {{ recipes_df|safe }}
     </div>
-
-    {% if chart %}
-      <div class="chart" id="chart-section">
-        <h2>Chart Visualization:</h2>
-        <img src="data:image/png;base64,{{ chart|safe }}" alt="Chart">
-      </div>
-    {% endif %}
   {% else %}
     <p class="no-data">No recipes found. Try another search.</p>
   {% endif %}
