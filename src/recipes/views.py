@@ -100,7 +100,7 @@ def search_view(request):
         'chart': chart
     }
 
-    return render(request, 'recipes/search_view.html', context)
+    return render(request, 'recipes/search.html', context)
 
 def add_recipe(request):
     if request.method == 'POST':

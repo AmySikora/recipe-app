@@ -8,7 +8,7 @@ urlpatterns = [
     path('', home, name='home'),
     path('recipes/', RecipeListView.as_view(), name='recipe_list'),
     path('recipes/<int:pk>/', RecipeDetailView.as_view(), name='recipe_detail'),
-    path('search/', search_view, name='search'),
+    path('search/', search_view, name='search'),  # ✅ Add this
     path('charts/', charts_view, name='charts'),
-    path('add/', add_recipe, name='add_recipe'),  
+    path('add/', add_recipe, name='add_recipe'),
 ]
