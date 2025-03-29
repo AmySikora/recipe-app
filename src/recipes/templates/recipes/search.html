@@ -2,142 +2,145 @@
 {% block title %}Find a Recipe{% endblock %}
 
 {% block content %}
-<style>
-  html {
-    scroll-behavior: smooth;
-  }
+<div class="search-page">
+  <style>
+    .search-page {
+      scroll-behavior: smooth;
+    }
 
-  .search-container {
-    max-width: 900px;
-    margin: 40px auto;
-    padding: 30px;
-    background-color: white;
-    border-radius: 16px;
-    box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.1);
-    font-family: Arial, sans-serif;
-    text-align: center;
-  }
+    .search-page .search-container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 30px;
+      background-color: white;
+      border-radius: 16px;
+      box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.1);
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
 
-  h1 {
-    font-size: 28px;
-    margin-bottom: 5px;
-  }
+    .search-page h1 {
+      font-size: 28px;
+      margin-bottom: 5px;
+    }
 
-  .subtext {
-    color: #666;
-    font-size: 14px;
-    margin-bottom: 25px;
-  }
+    .search-page .subtext {
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 25px;
+    }
 
-  form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-  }
+    .search-page form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
 
-  .search-wrapper {
-    position: relative;
-    width: 100%;
-    max-width: 400px;
-  }
+    .search-page .search-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 400px;
+    }
 
-  .search-wrapper input[type="text"] {
-    padding: 12px 12px 12px 40px;
-    width: 100%;
-    font-size: 16px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    box-shadow: inset 1px 1px 3px rgba(0,0,0,0.05);
-  }
+    .search-page .search-wrapper input[type="text"] {
+      padding: 12px 12px 12px 40px;
+      width: 100%;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      box-shadow: inset 1px 1px 3px rgba(0,0,0,0.05);
+    }
 
-  .search-wrapper::before {
-    content: "🔍";
-    position: absolute;
-    left: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 18px;
-    color: #888;
-    pointer-events: none;
-  }
+    .search-page .search-wrapper::before {
+      content: "🔍";
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 18px;
+      color: #888;
+      pointer-events: none;
+    }
 
-  .view-charts-btn {
-    margin-top: 20px;
-    padding: 10px 20px;
-    background-color: #ff9800;
-    color: white;
-    font-weight: bold;
-    font-size: 16px;
-    text-decoration: none;
-    border-radius: 8px;
-    transition: 0.3s;
-  }
+    .search-page .view-charts-btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #ff9800;
+      color: white;
+      font-weight: bold;
+      font-size: 16px;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: 0.3s;
+    }
 
-  .view-charts-btn:hover {
-    background-color: #e68900;
-    transform: scale(1.05);
-  }
+    .search-page .view-charts-btn:hover {
+      background-color: #e68900;
+      transform: scale(1.05);
+    }
 
-  .result-table {
-    overflow-x: auto;
-    background: #fff;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 2px 2px 10px rgba(0,0,0,0.08);
-    margin-top: 30px;
-    text-align: left;
-  }
+    .search-page .result-table {
+      overflow-x: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 2px 2px 10px rgba(0,0,0,0.08);
+      margin-top: 30px;
+      text-align: left;
+    }
 
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-  }
+    .search-page table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
 
-  th, td {
-    border: 1px solid #ddd;
-    padding: 12px;
-  }
+    .search-page th,
+    .search-page td {
+      border: 1px solid #ddd;
+      padding: 12px;
+    }
 
-  th {
-    background-color: #ffebcc;
-    font-weight: bold;
-  }
+    .search-page th {
+      background-color: #ffebcc;
+      font-weight: bold;
+    }
 
-  td img {
-    max-height: 60px;
-    border-radius: 6px;
-    object-fit: cover;
-  }
+    .search-page td img {
+      max-height: 60px;
+      border-radius: 6px;
+      object-fit: cover;
+    }
 
-  .no-data {
-    font-size: 18px;
-    color: #888;
-    margin-top: 30px;
-  }
-</style>
+    .search-page .no-data {
+      font-size: 18px;
+      color: #888;
+      margin-top: 30px;
+    }
+  </style>
 
-<div class="search-container">
-  <h1>Find a Recipe</h1>
-  <p class="subtext">Leave the search blank to view all recipes</p>
+  <div class="search-container">
+    <h1>Find a Recipe</h1>
+    <p class="subtext">Leave the search blank to view all recipes</p>
 
-  <form method="POST" action="{% url 'recipes:search' %}">
-    {% csrf_token %}
-    <div class="search-wrapper">
-      {{ form.search_term }}
-    </div>
-  </form>
+    <form method="POST" action="{% url 'recipes:search' %}">
+      {% csrf_token %}
+      <div class="search-wrapper">
+        {{ form.search_term }}
+      </div>
+    </form>
 
-  {% if recipes_df %}
-    <h2>Search Results:</h2>
-    <a href="{% url 'recipes:charts' %}" class="view-charts-btn">📊 View Charts</a>
+    {% if recipes_df %}
+      <h2>Search Results:</h2>
+      <a href="{% url 'recipes:charts' %}" class="view-charts-btn">📊 View Charts</a>
 
-    <div class="result-table">
-      {{ recipes_df|safe }}
-    </div>
-  {% else %}
-    <p class="no-data">No recipes found. Try another search.</p>
-  {% endif %}
+      <div class="result-table">
+        {{ recipes_df|safe }}
+      </div>
+    {% else %}
+      <p class="no-data">No recipes found. Try another search.</p>
+    {% endif %}
+  </div>
 </div>
 {% endblock %}

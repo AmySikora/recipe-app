@@ -1,0 +1,62 @@
+{% extends 'recipes/base.html' %}
+{% block title %}Recipe Charts{% endblock %}
+
+{% block content %}
+<style>
+  .charts-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .chart-card {
+    background-color: white;
+    border-radius: 16px;
+    box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+  }
+
+  .chart-card h2 {
+    color: #ff9800;
+    font-size: 22px;
+    margin-bottom: 5px;
+  }
+
+  .chart-card p.caption {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 15px;
+  }
+
+  .chart-card img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+</style>
+
+<div class="charts-container">
+  <div class="chart-card">
+    <h2>📊 Cooking Time Comparison</h2>
+    <p class="caption">This bar chart compares the cooking time of all recipes.</p>
+    <img src="data:image/png;base64,{{ bar_chart|safe }}" alt="Bar Chart of Cooking Times">
+  </div>
+
+  <div class="chart-card">
+    <h2>🥧 Recipes by Difficulty</h2>
+    <p class="caption">This pie chart shows how many recipes fall into each difficulty level.</p>
+    <img src="data:image/png;base64,{{ pie_chart|safe }}" alt="Pie Chart of Difficulties">
+  </div>
+
+  <div class="chart-card">
+    <h2>📈 Ingredient Count per Recipe</h2>
+    <p class="caption">This line chart displays how many ingredients are used in each recipe.</p>
+    <img src="data:image/png;base64,{{ line_chart|safe }}" alt="Line Chart of Ingredient Counts">
+  </div>
+</div>
+{% endblock %}
