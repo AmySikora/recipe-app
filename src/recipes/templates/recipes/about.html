@@ -1,0 +1,63 @@
+{% extends 'recipes/base.html' %}
+{% load static %}
+
+{% block title %}About Me{% endblock %}
+
+{% block content %}
+<style>
+    .about-simple {
+        max-width: 700px;
+        margin: 60px auto;
+        text-align: center;
+        padding: 20px;
+        font-family: 'Ubuntu', sans-serif;
+        color: #333;
+    }
+
+    .about-simple img {
+        max-width: 150px;
+        margin-bottom: 20px;
+    }
+
+    .about-simple h1 {
+        font-size: 28px;
+        margin-bottom: 12px;
+    }
+
+    .about-simple p {
+        font-size: 18px;
+        line-height: 1.5;
+        margin-bottom: 24px;
+    }
+
+    .portfolio-link {
+        display: inline-block;
+        background-color: #ff9800;
+        color: white;
+        text-decoration: none;
+        padding: 12px 24px;
+        border-radius: 6px;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+    }
+
+    .portfolio-link:hover {
+        background-color: #e68900;
+    }
+</style>
+
+<div class="about-simple">
+    <img src="{% static 'recipes/images/Firebird-removebg-preview.png' %}" alt="Phoenix bird logo">
+    <h1>Hello, I’m Amy 👋</h1>
+    <p>
+        I created this Recipe App as part of my journey into web development.
+        It lets users search, add, and explore recipes using smart features like difficulty ratings and data visualizations.
+    </p>
+    <p>
+        Want to see more of my work?
+    </p>
+    <a href="https://amysikora.github.io/portfolio-website/" target="_blank" class="portfolio-link">
+        Visit My Portfolio
+    </a>
+</div>
+{% endblock %}
