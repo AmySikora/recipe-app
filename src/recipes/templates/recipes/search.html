@@ -44,10 +44,13 @@
       border: 1px solid #ccc;
       border-radius: 8px 0 0 8px;
       width: 100%;
+      max-width: 360px;  
+      min-width: 250px;  
       box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.05);
       height: 44px;
       box-sizing: border-box;
     }
+
 
     .search-icon-btn {
       background-color: #ff9800;
@@ -125,18 +128,26 @@
       color: #888;
       margin-top: 30px;
     }
+
+    .search-form-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
   </style>
 
   <div class="search-container">
     <h1>Find a Recipe</h1>
     <p class="subtext">Leave the search blank to view all recipes</p>
-
-    <form method="GET" action="{% url 'recipes:search' %}">
-      <div class="search-wrapper-combined">
-        {{ form.search_term }}
-        <button type="submit" class="search-icon-btn" title="Search" aria-label="Search">🔍</button>
-      </div>
-    </form>
+    <div class="search-form-container">
+      <form method="GET" action="{% url 'recipes:search' %}">
+        <div class="search-wrapper-combined">
+          {{ form.search_term }}
+          <button type="submit" class="search-icon-btn" title="Search" aria-label="Search">🔍</button>
+        </div>
+      </form>
+    </div>    
 
     {% if has_results %}
     <h2>Search Results:</h2>

@@ -84,10 +84,9 @@ def search_view(request):
     recipes_df = None
     recipes_df_raw = None
     chart = None
+    chart_type = '#1'
     has_results = False
-
     search_term = request.GET.get('search_term', '')
-    chart_type = request.GET.get('chart_type', '#1')
 
     qs = Recipe.objects.all()
 
@@ -120,8 +119,11 @@ def search_view(request):
         df = pd.DataFrame(data)
         recipes_df = df.to_html(escape=False)
         recipes_df_raw = df
-        has_results = not df.empty
         chart = get_chart(chart_type, df, labels=labels)
+        has_results = not df.empty
+
+    # Reset the form visually
+    form = RecipeSearchForm(initial={'search_term': '', 'chart_type': chart_type})
 
     context = {
         'form': form,
