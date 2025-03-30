@@ -1,0 +1,158 @@
+/* Styles for login, signup, and success pages */
+
+/* ===========================
+   GLOBAL STYLES
+   =========================== */
+
+body {
+  background-color: #f8f7f5;
+  text-align: center;
+}
+
+.logo {
+  max-width: 80px;
+  margin-bottom: 15px;
+}
+
+.btn {
+  display: inline-block;
+  padding: 12px 20px;
+  font-size: 18px;
+  background-color: #ff9800;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.btn:hover {
+  background-color: #e68900;
+  transform: scale(1.05);
+}
+
+.form-group {
+  text-align: left;
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* ===========================
+   LOGIN PAGE STYLES
+   =========================== */
+
+.login-container {
+  max-width: 400px;
+  margin: auto;
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  margin-top: 50px;
+}
+
+.welcome-message {
+  font-size: 20px;
+  color: #ff9800;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.register-link {
+  margin-top: 15px;
+  font-size: 16px;
+}
+
+.register-link a {
+  color: #ff9800;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.register-link a:hover {
+  text-decoration: underline;
+}
+
+/* ===========================
+   SIGNUP PAGE STYLES
+   =========================== */
+
+.signup-container {
+  max-width: 400px;
+  margin: 60px auto;
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.login-link {
+  margin-top: 15px;
+  font-size: 16px;
+}
+
+.login-link a {
+  color: #ff9800;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.login-link a:hover {
+  text-decoration: underline;
+}
+
+/* ===========================
+   SUCCESS PAGE STYLES
+   =========================== */
+
+.success-container {
+  max-width: 600px;
+  margin: 50px auto;
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.success-container h1 {
+  font-size: 28px;
+  color: #ff9800;
+  margin-bottom: 15px;
+}
+
+.success-container p {
+  font-size: 18px;
+  color: #333;
+  margin-bottom: 25px;
+}
+
+.success-container .btn {
+  width: auto;
+  margin: 10px;
+}
