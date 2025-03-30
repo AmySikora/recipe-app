@@ -32,10 +32,9 @@
 
     .search-wrapper-combined {
       display: flex;
-      align-items: stretch;
       justify-content: center;
-      max-width: 400px;
-      width: 100%;
+      max-width: 500px;
+      margin: 0 auto 10px;
     }
 
     .search-wrapper-combined input[type="text"] {
@@ -44,13 +43,10 @@
       border: 1px solid #ccc;
       border-radius: 8px 0 0 8px;
       width: 100%;
-      max-width: 360px;  
-      min-width: 250px;  
       box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.05);
       height: 44px;
       box-sizing: border-box;
     }
-
 
     .search-icon-btn {
       background-color: #ff9800;
@@ -73,20 +69,20 @@
       transform: scale(1.05);
     }
 
-    .view-charts-btn {
-      margin-top: 20px;
-      padding: 10px 20px;
+    .view-chart-btn {
+      margin-top: 10px;
+      padding: 12px 24px;
       background-color: #ff9800;
       color: white;
       font-weight: bold;
       font-size: 16px;
       text-decoration: none;
       border-radius: 8px;
-      transition: 0.3s;
       display: inline-block;
+      transition: 0.3s;
     }
 
-    .view-charts-btn:hover {
+    .view-chart-btn:hover {
       background-color: #e68900;
       transform: scale(1.05);
     }
@@ -129,10 +125,43 @@
       margin-top: 30px;
     }
 
-    .search-form-container {
-      display: flex;
-      justify-content: center;
+    .chart-card {
+      background-color: #f9f9f9;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.05);
+      margin-top: 60px;
+    }
+
+    .chart-title {
+      font-size: 22px;
+      color: #ff9800;
+      font-weight: bold;
+      margin: 10px 0 8px;
+    }
+
+    .chart-caption {
+      color: #555;
       margin-bottom: 20px;
+      font-size: 15px;
+    }
+
+    .chart-img {
+      max-width: 100%;
+      border-radius: 8px;
+    }
+
+    .chart-selector-label {
+      font-size: 15px;
+      margin: 25px 0 10px;
+      color: #444;
+    }
+
+    .chart-type-select {
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
     }
 
   </style>
@@ -140,25 +169,52 @@
   <div class="search-container">
     <h1>Find a Recipe</h1>
     <p class="subtext">Leave the search blank to view all recipes</p>
-    <div class="search-form-container">
-      <form method="GET" action="{% url 'recipes:search' %}">
-        <div class="search-wrapper-combined">
-          {{ form.search_term }}
-          <button type="submit" class="search-icon-btn" title="Search" aria-label="Search">🔍</button>
-        </div>
-      </form>
-    </div>    
+
+    <form method="GET" action="{% url 'recipes:search' %}">
+      <div class="search-wrapper-combined">
+        {{ form.search_term }}
+        <button type="submit" class="search-icon-btn" title="Search" aria-label="Search">🔍</button>
+      </div>
+    </form>
 
     {% if has_results %}
-    <h2>Search Results:</h2>
-    <a href="{% url 'recipes:charts' %}" class="view-charts-btn">📊 View Charts</a>
-    <div class="result-table">
-      {{ recipes_df|safe }}
-    </div>
-  {% else %}
-    <p class="no-data">No recipes found. Try another search.</p>
-  {% endif %}  
+      <a href="#chart-section" class="view-chart-btn">📊 View Charts for These Recipes</a>
+    {% endif %}
 
+    {% if has_results %}
+      <h2 style="margin-top: 40px;">Search Results:</h2>
+      <div class="result-table">
+        {{ recipes_df|safe }}
+      </div>
+    {% else %}
+      <p class="no-data">No recipes found. Try another search.</p>
+    {% endif %}
+
+    {% if chart %}
+      <div id="chart-section" class="chart-card">
+        <label class="chart-selector-label" for="chart-select">Select a chart type:</label>
+        <form method="GET" action="#chart-section">
+          <input type="hidden" name="search_term" value="{{ request.GET.search_term }}">
+          <select name="chart_type" id="chart-select" class="chart-type-select" onchange="this.form.submit()">
+            <option value="#1" {% if chart_type == "#1" %}selected{% endif %}>📊 Cooking Time</option>
+            <option value="#2" {% if chart_type == "#2" %}selected{% endif %}>🥧 Difficulty</option>
+            <option value="#3" {% if chart_type == "#3" %}selected{% endif %}>📈 Ingredient Count</option>
+          </select>
+        </form>
+
+        {% if chart_type == "#1" %}
+          <div class="chart-title">📊 Cooking Time Comparison</div>
+          <p class="chart-caption">This bar chart shows cooking time for each recipe in minutes.</p>
+        {% elif chart_type == "#2" %}
+          <div class="chart-title">🥧 Difficulty Breakdown</div>
+          <p class="chart-caption">This pie chart shows how recipes are distributed by difficulty.</p>
+        {% elif chart_type == "#3" %}
+          <div class="chart-title">📈 Ingredient Count per Recipe</div>
+          <p class="chart-caption">This line chart shows the number of ingredients per recipe.</p>
+        {% endif %}
+        <img src="data:image/png;base64,{{ chart|safe }}" alt="Chart" class="chart-img">
+      </div>
+    {% endif %}
   </div>
 </div>
 {% endblock %}

@@ -17,8 +17,14 @@
   .chart-buttons {
     display: flex;
     justify-content: center;
-    gap: 20px;
+    gap: 30px;
     margin-bottom: 30px;
+  }
+
+  .chart-buttons > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
   .chart-buttons button {
@@ -33,11 +39,18 @@
     transform: scale(1.2);
   }
 
+  .chart-label {
+    font-size: 14px;
+    margin-top: 5px;
+    color: #333;
+  }
+
   .chart-card {
     background-color: #f9f9f9;
     padding: 25px;
     border-radius: 12px;
     box-shadow: 2px 2px 10px rgba(0,0,0,0.05);
+    margin-top: 20px;
   }
 
   .chart-title {
@@ -68,9 +81,18 @@
     <input type="hidden" name="chart_type" id="chart-type-input">
 
     <div class="chart-buttons">
-      <button type="submit" onclick="selectChart('#1')" title="Bar Chart">📊</button>
-      <button type="submit" onclick="selectChart('#2')" title="Pie Chart">🥧</button>
-      <button type="submit" onclick="selectChart('#3')" title="Line Chart">📈</button>
+      <div>
+        <button type="submit" onclick="selectChart('#1')" title="Bar Chart">📊</button>
+        <div class="chart-label">Cooking Time</div>
+      </div>
+      <div>
+        <button type="submit" onclick="selectChart('#2')" title="Pie Chart">🥧</button>
+        <div class="chart-label">By Difficulty</div>
+      </div>
+      <div>
+        <button type="submit" onclick="selectChart('#3')" title="Line Chart">📈</button>
+        <div class="chart-label"># Ingredients</div>
+      </div>
     </div>
   </form>
 
@@ -84,16 +106,22 @@
     <div class="chart-card">
       {% if chart_type == '#1' %}
         <div class="chart-title">📊 Cooking Time Comparison</div>
-        <p class="chart-caption">This bar chart compares the cooking time of all recipes.</p>
+        <p class="chart-caption">This bar chart compares the cooking time (in minutes) for each recipe.</p>
       {% elif chart_type == '#2' %}
-        <div class="chart-title">🥧 Recipes by Difficulty</div>
-        <p class="chart-caption">This pie chart shows how many recipes fall into each difficulty level.</p>
+        <div class="chart-title">🥧 Recipe Count by Difficulty</div>
+        <p class="chart-caption">This pie chart shows the distribution of recipes across different difficulty levels.</p>
       {% elif chart_type == '#3' %}
         <div class="chart-title">📈 Ingredient Count per Recipe</div>
-        <p class="chart-caption">This line chart displays how many ingredients are used in each recipe.</p>
+        <p class="chart-caption">This line chart shows how many ingredients are used in each recipe.</p>
+      {% else %}
+        <div class="chart-title">📊 Recipe Chart</div>
+        <p class="chart-caption">Chart based on selected recipe data.</p>
       {% endif %}
+
       <img src="data:image/png;base64,{{ chart|safe }}" alt="Chart" class="chart-img">
     </div>
+  {% else %}
+    <p style="margin-top: 30px; color: #777;">No chart selected. Choose a chart above to display data.</p>
   {% endif %}
 </div>
 {% endblock %}

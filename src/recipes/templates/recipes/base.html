@@ -7,121 +7,146 @@
   <link rel="icon" type="image/x-icon" href="{% static 'icons/favicon.ico' %}">
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f8f8f8;
-      margin: 0;
-      padding-top: 80px;
-    }
-  
-    .navbar {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      background-color: #333;
-      padding: 10px 20px;
-      position: fixed;
-      top: 0;
-      width: 100%;
-      z-index: 1000;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-  
-    .nav-left,
-    .nav-center,
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-shrink: 0;
-      padding-right: 25px; 
-    }
+  font-family: Arial, sans-serif;
+  background-color: #f8f8f8;
+  margin: 0;
+  padding-top: 80px;
+}
 
-    .nav-center {
-      flex: 1;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-  
-    .navbar a {
-      color: white;
-      text-decoration: none;
-      font-size: 15px;
-      font-weight: bold;
-      padding: 6px 10px;
-    }
-  
-    .navbar a:hover {
-      background-color: #ff9800;
-      border-radius: 5px;
-    }
-  
-    .logo {
-      max-height: 36px;
-    }
-  
-    .search-form {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      flex-wrap: nowrap;
-    }
-  
-    .search-form input[type="text"] {
-      padding: 5px 8px;
-      border-radius: 5px;
-      border: none;
-      font-size: 14px;
-      width: 110px;
-      max-width: 110px;
-    }
-  
-    .search-form button {
-      padding: 5px 8px;
-      background-color: #ff9800;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      font-size: 14px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-  
-    .search-form button:hover {
-      background-color: #e68900;
-    }
-  
-    .content {
-      padding: 30px 50px;
-      max-width: 1200px;
-      margin: 0 auto;
-      text-align: center;
-    }
-  
-    /* Responsive tweak */
-    @media (max-width: 768px) {
-      .nav-center,
-      .nav-right {
-        justify-content: center;
-        margin-top: 10px;
-      }
-  
-      .search-form input[type="text"] {
-        width: 90px;
-      }
+.navbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #333;
+  padding: 10px 12px;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  gap: 10px;
+  box-sizing: border-box;
+}
 
-      .search-form button {
-        font-size: 12px;
-        padding: 15px;
+.nav-left {
+  flex-shrink: 0;
+}
+
+.nav-center {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  min-width: 0;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  min-width: 0;
+}
+
+.navbar a {
+  color: white;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: bold;
+  padding: 6px 10px;
+}
+
+.navbar a:hover {
+  background-color: #ff9800;
+  border-radius: 5px;
+}
+
+.logo {
+  max-height: 36px;
+}
+
+/* SEARCH BAR */
+.search-form {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 160px;
+  flex-shrink: 1;
+  overflow: hidden;
+}
+
+.search-form input[type="text"] {
+  padding: 5px 8px;
+  border-radius: 5px;
+  border: none;
+  font-size: 14px;
+  flex: 1;
+  width: 100%;
+  min-width: 60px;
+  box-sizing: border-box;
+}
+
+.search-form button {
+  padding: 5px 6px;
+  background-color: #ff9800;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.search-form button:hover {
+  background-color: #e68900;
+}
+
+/* PAGE CONTENT */
+.content {
+  padding: 50px 50px;
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* RESPONSIVE DESIGN */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 10px;
   }
-  
-      .navbar a {
-        font-size: 14px;
-        padding: 5px 8px;
-      }
-    }
-  </style>
-  
+
+  .nav-center,
+  .nav-right {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .search-form {
+    margin-top: 8px;
+    max-width: 100%;
+  }
+
+  .navbar a {
+    font-size: 14px;
+    padding: 5px 8px;
+  }
+
+  .search-form input[type="text"] {
+    width: 80px;
+  }
+
+  .search-form button {
+    font-size: 12px;
+    padding: 4px 6px;
+  }
+}
+</style>
+
 </head>
 
 <body>
@@ -134,17 +159,17 @@
       </a>
     </div>
 
-    <!-- Center: Nav links -->
+    <!-- Center: Navigation Links -->
     <div class="nav-center">
       <a href="{% url 'recipes:home' %}">Home</a>
       <a href="{% url 'recipes:recipe_list' %}">All Recipes</a>
-      <a href="{% url 'recipes:search' %}">Search</a>
-      <a href="{% url 'recipes:charts' %}">Charts</a>
       <a href="{% url 'recipes:add_recipe' %}">Add a Recipe</a>
+      <a href="{% url 'recipes:charts' %}">View Recipe Charts</a>
+      <a href="{% url 'recipes:search' %}">Search Recipes</a>
       <a href="{% url 'recipes:about' %}">About Me</a>
     </div>
 
-    <!-- Right: Logout/Login + Search -->
+    <!-- Right: Login/Logout + Search -->
     <div class="nav-right">
       {% if user.is_authenticated %}
         <a href="{% url 'logout' %}">Logout</a>
@@ -152,8 +177,7 @@
         <a href="{% url 'login' %}">Login</a>
       {% endif %}
 
-      <form action="{% url 'recipes:search' %}" method="post" class="search-form">
-        {% csrf_token %}
+      <form action="{% url 'recipes:search' %}" method="get" class="search-form">
         <input type="text" name="search_term" placeholder="Search recipes...">
         <button type="submit">🔍</button>
       </form>
@@ -164,19 +188,17 @@
     {% block content %}{% endblock %}
   </div>
 
-</body>
-</html>
-
-<script>
+  <script>
     function scrollToChart(event) {
       event.preventDefault();
       const chart = document.getElementById("chart-section");
       if (chart) {
         chart.scrollIntoView({ behavior: 'smooth' });
       } else {
-        // If not on the records page, go there and let the button handle scrolling
         window.location.href = "{% url 'recipes:search' %}";
       }
     }
   </script>
-  
+
+</body>
+</html>

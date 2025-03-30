@@ -48,16 +48,15 @@ def about(request):
 
 @login_required(login_url='/login/')
 def charts_view(request):
-    qs = Recipe.objects.all()
     chart = None
-    chart_type = '#1'  # default
+    chart_type = None
+    labels = []
+    data = []
 
     if request.method == 'POST':
-        chart_type = request.POST.get('chart_type', '#1')
+        chart_type = request.POST.get('chart_type', '')
 
-    if qs.exists():
-        data = []
-        labels = []
+        qs = Recipe.objects.all()
 
         for recipe in qs:
             labels.append(recipe.name)
@@ -71,7 +70,9 @@ def charts_view(request):
             })
 
         df = pd.DataFrame(data)
-        chart = get_chart(chart_type, df, labels=labels)
+
+        if chart_type:
+            chart = get_chart(chart_type, df, labels=labels)
 
     return render(request, 'recipes/charts.html', {
         'chart': chart,
@@ -87,6 +88,8 @@ def search_view(request):
     chart_type = '#1'
     has_results = False
     search_term = request.GET.get('search_term', '')
+    chart_type = request.GET.get('chart_type', '#1') 
+
 
     qs = Recipe.objects.all()
 
@@ -130,7 +133,8 @@ def search_view(request):
         'recipes_df': recipes_df,
         'recipes_df_raw': recipes_df_raw,
         'chart': chart,
-        'has_results': has_results
+        'has_results': has_results,
+        'chart_type': chart_type,
     }
 
     return render(request, 'recipes/search.html', context)
