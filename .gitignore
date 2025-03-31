@@ -4,6 +4,3 @@
 
 # Ignore environment variables
 .env
-
-# Ignore Django settings
-*/settings.py
