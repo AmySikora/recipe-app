@@ -1,34 +1,36 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView, DetailView
-from .models import Recipe, Comment
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from .forms import RecipeSearchForm, RecipeForm, CommentForm
 from django.contrib import messages
-from django.db.models import Q
 from django.urls import reverse
-from .utils import get_chart
-import pandas as pd
-from django.shortcuts import get_object_or_404
 from django.http import HttpResponseForbidden
-from django.db.models import Avg
+from django.db.models import Q, Avg
+import pandas as pd
 
+from .models import Recipe, Comment
+from .forms import RecipeSearchForm, RecipeForm, CommentForm
+from .utils import get_chart
+
+# Homepage view
 def home(request):
-        return render(request, 'recipes/recipes_home.html')
+    return render(request, 'recipes/recipes_home.html')
 
+# Lists all recipes (requires login)
 class RecipeListView(LoginRequiredMixin, ListView):
     model = Recipe
     template_name = 'recipes/recipes_list.html'
     login_url = '/login/'
 
+# Displays details of a single recipe (requires login)
 class RecipeDetailView(LoginRequiredMixin, DetailView):
     model = Recipe
     template_name = 'recipes/detail.html'
     login_url = '/login/'
 
-
+    # Add extra context to the detail page
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         recipe = self.get_object()
@@ -39,6 +41,7 @@ class RecipeDetailView(LoginRequiredMixin, DetailView):
         context['comments'] = Comment.objects.filter(recipe=recipe).order_by('-created_at')
         return context
 
+    # Handle comment form submission
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         comment_text = request.POST.get('comment')
@@ -53,6 +56,7 @@ class RecipeDetailView(LoginRequiredMixin, DetailView):
             )
         return redirect('recipes:recipe_detail', pk=self.object.pk)
 
+# User signup view
 def signup_view(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
@@ -64,9 +68,11 @@ def signup_view(request):
         form = UserCreationForm()
     return render(request, 'auth/signup.html', {'form': form})
 
+# About page
 def about(request):
     return render(request, 'recipes/about.html')
 
+# Displays charts based on recipe data (requires login)
 @login_required(login_url='/login/')
 def charts_view(request):
     chart = None
@@ -76,7 +82,6 @@ def charts_view(request):
 
     if request.method == 'POST':
         chart_type = request.POST.get('chart_type', '')
-
         qs = Recipe.objects.all()
 
         for recipe in qs:
@@ -100,17 +105,16 @@ def charts_view(request):
         'chart_type': chart_type
     })
 
+# Search view with table and optional chart (requires login)
 @login_required(login_url='/login/')
 def search_view(request):
     form = RecipeSearchForm(request.GET or None)
     recipes_df = None
     recipes_df_raw = None
     chart = None
-    chart_type = '#1'
-    has_results = False
-    search_term = request.GET.get('search_term', '')
     chart_type = request.GET.get('chart_type', '#1') 
-
+    search_term = request.GET.get('search_term', '')
+    has_results = False
 
     qs = Recipe.objects.all()
 
@@ -146,7 +150,6 @@ def search_view(request):
         chart = get_chart(chart_type, df, labels=labels)
         has_results = not df.empty
 
-    # Reset the form visually
     form = RecipeSearchForm(initial={'search_term': '', 'chart_type': chart_type})
 
     context = {
@@ -160,6 +163,7 @@ def search_view(request):
 
     return render(request, 'recipes/search.html', context)
 
+# Add a new recipe
 def add_recipe(request):
     if request.method == 'POST':
         form = RecipeForm(request.POST, request.FILES)
@@ -174,6 +178,7 @@ def add_recipe(request):
         form = RecipeForm()
     return render(request, 'recipes/add_recipe.html', {'form': form})
 
+# Edit an existing recipe
 @login_required
 def edit_recipe(request, pk):
     recipe = get_object_or_404(Recipe, pk=pk)
@@ -191,6 +196,7 @@ def edit_recipe(request, pk):
 
     return render(request, 'recipes/edit_recipe.html', {'form': form, 'recipe': recipe})
 
+# Edit an existing comment
 @login_required
 def edit_comment(request, pk):
     comment = get_object_or_404(Comment, pk=pk, user=request.user)
@@ -205,14 +211,16 @@ def edit_comment(request, pk):
 
     return render(request, 'recipes/edit_comment.html', {'form': form, 'comment': comment})
 
+# Delete a comment
+@login_required
 def delete_comment(request, comment_id):
-    print("DELETE VIEW CALLED") 
     comment = get_object_or_404(Comment, id=comment_id, user=request.user)
     recipe_id = comment.recipe.id
     comment.delete()
     messages.success(request, "Your comment was deleted.")
     return redirect('recipes:recipe_detail', pk=recipe_id)
 
+# User login view
 def login_view(request):
     if request.user.is_authenticated:
         return redirect('recipes:recipe_list')
@@ -240,6 +248,7 @@ def login_view(request):
         'error_message': error_message
     })
 
+# User logout view
 def logout_view(request):
     logout(request)
     return render(request, 'auth/success.html')

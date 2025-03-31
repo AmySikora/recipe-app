@@ -1,13 +1,16 @@
 from django import forms
 from .models import Recipe, Comment
 
+# Chart type options for displaying recipe data visually
 CHART_CHOICES = [
     ('#1', 'Bar Chart'),
     ('#2', 'Pie Chart'),
     ('#3', 'Line Chart'),
 ]
 
+# Form for searching recipes and selecting chart type
 class RecipeSearchForm(forms.Form):
+    # Optional search field for name or ingredients
     search_term = forms.CharField(
         max_length=120,
         required=False,
@@ -17,12 +20,14 @@ class RecipeSearchForm(forms.Form):
         })
     )
 
+    # Required field to choose the type of chart to display
     chart_type = forms.ChoiceField(
-            choices=CHART_CHOICES,
-            required=True,
-            label="Chart Type"
-        )
-    
+        choices=CHART_CHOICES,
+        required=True,
+        label="Chart Type"
+    )
+
+# Form for creating or editing a recipe
 class RecipeForm(forms.ModelForm):
     class Meta:
         model = Recipe
@@ -32,6 +37,7 @@ class RecipeForm(forms.ModelForm):
             'ingredients': forms.Textarea(attrs={'rows': 3}),
         }
 
+# Form for submitting a comment and rating on a recipe
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
@@ -44,4 +50,3 @@ class CommentForm(forms.ModelForm):
             'text': 'Comment',
             'rating': 'Star Rating (1–5)',
         }
-    
