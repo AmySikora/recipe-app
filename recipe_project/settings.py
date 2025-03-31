@@ -31,7 +31,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'fallback-key')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG') == 'False'
 
-ALLOWED_HOSTS = ["recipe-app77.herokuapp.com"]
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
