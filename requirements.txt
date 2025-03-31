@@ -1,6 +1,5 @@
 asgiref==3.8.1
 astroid==3.2.4
-backports.zoneinfo==0.2.1
 cffi==1.17.1
 contourpy==1.1.1
 cryptography==44.0.2
