@@ -20,7 +20,7 @@ class Recipe(models.Model):
     ingredients = models.TextField(help_text="List ingredients separated by commas")  
     cooking_time = models.PositiveIntegerField(help_text="Cooking time in minutes")
     difficulty = models.CharField(max_length=20, blank=True, null=True) 
-    pic = models.ImageField(upload_to='recipes', default='no_picture.jpg')
+    pic = models.ImageField(upload_to='recipes/', default='recipes/no_picture.png')
     instructions = models.TextField(help_text="Step-by-step cooking instructions", default="No instructions provided.")
     related_recipes = models.ManyToManyField('self', blank=True)
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
