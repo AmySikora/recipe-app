@@ -30,7 +30,7 @@ class CommentViewTests(TestCase):
         self.assertEqual(self.comment.text, 'Updated!')
 
     def test_delete_comment_view(self):
-        response = self.client.post(reverse('recipes:delete_comment', kwargs={'pk': self.comment.pk}))
+        response = self.client.post(reverse('recipes:delete_comment', kwargs={'comment_id': self.comment.pk}))
         self.assertEqual(Comment.objects.count(), 0)
 
     def test_edit_recipe_view(self):
