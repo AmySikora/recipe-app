@@ -2,6 +2,28 @@ from django.test import TestCase
 from django.urls import reverse
 from recipes.models import Recipe
 from recipes.forms import RecipeSearchForm
+from recipes.forms import RecipeForm, CommentForm
+
+class RecipeFormTest(TestCase):
+    def test_valid_recipe_form(self):
+        form_data = {
+            'name': 'Test Soup',
+            'cooking_time': 30,
+            'ingredients': 'water, salt, vegetables',
+            'description': 'A simple soup',
+            'instructions': 'Boil everything.'
+        }
+        form = RecipeForm(data=form_data)
+        self.assertTrue(form.is_valid())
+
+class CommentFormTest(TestCase):
+    def test_valid_comment_form(self):
+        form_data = {
+            'text': 'Great recipe!',
+            'rating': 4
+        }
+        form = CommentForm(data=form_data)
+        self.assertTrue(form.is_valid())
 
 class RecipeModelTest(TestCase):
     def setUp(self):

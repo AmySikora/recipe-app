@@ -1,5 +1,5 @@
 from django import forms
-from .models import Recipe
+from .models import Recipe, Comment
 
 CHART_CHOICES = [
     ('#1', 'Bar Chart'),
@@ -32,4 +32,16 @@ class RecipeForm(forms.ModelForm):
             'ingredients': forms.Textarea(attrs={'rows': 3}),
         }
 
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['text', 'rating']
+        widgets = {
+            'text': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Leave a comment...'}),
+            'rating': forms.NumberInput(attrs={'min': 1, 'max': 5}),
+        }
+        labels = {
+            'text': 'Comment',
+            'rating': 'Star Rating (1–5)',
+        }
     

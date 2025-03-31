@@ -1,5 +1,17 @@
 from django.db import models
 from django.shortcuts import reverse
+from django.contrib.auth.models import User
+
+# Let users add comments and rating to recipes
+class Comment(models.Model):
+    recipe = models.ForeignKey('Recipe', on_delete=models.CASCADE, related_name='comments')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    text = models.TextField(max_length=500)
+    rating = models.PositiveIntegerField(default=5)  # Allow 1–5 stars
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.rating}⭐ on {self.recipe.name}"
 
 # Create your models here.
 class Recipe(models.Model):
@@ -11,8 +23,9 @@ class Recipe(models.Model):
     pic = models.ImageField(upload_to='recipes', default='no_picture.jpg')
     instructions = models.TextField(help_text="Step-by-step cooking instructions", default="No instructions provided.")
     related_recipes = models.ManyToManyField('self', blank=True)
-
-    
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+  
     # determine recipe difficulty
     @property
     def difficulty(self):

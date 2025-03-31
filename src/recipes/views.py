@@ -1,16 +1,22 @@
 from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView
-from .models import Recipe
+from .models import Recipe, Comment
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from .forms import RecipeSearchForm, RecipeForm
+from .forms import RecipeSearchForm, RecipeForm, CommentForm
 from django.contrib import messages
 from django.db.models import Q
 from django.urls import reverse
 from .utils import get_chart
 import pandas as pd
+from django.shortcuts import get_object_or_404
+from django.http import HttpResponseForbidden
+from django.db.models import Avg
+
+def home(request):
+        return render(request, 'recipes/recipes_home.html')
 
 class RecipeListView(LoginRequiredMixin, ListView):
     model = Recipe
@@ -22,15 +28,30 @@ class RecipeDetailView(LoginRequiredMixin, DetailView):
     template_name = 'recipes/detail.html'
     login_url = '/login/'
 
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['ingredients_list'] = self.object.ingredients.split(", ")
-        context['instructions_list'] = self.object.instructions.split("\n")
-        context['related_recipes'] = self.object.related_recipes.all()
+        recipe = self.get_object()
+        context['ingredients_list'] = recipe.ingredients.split(", ")
+        context['instructions_list'] = recipe.instructions.split("\n")
+        context['related_recipes'] = recipe.related_recipes.all(),
+        context['average_rating'] = recipe.comments.aggregate(avg_rating=Avg('rating'))['avg_rating']
+        context['comments'] = Comment.objects.filter(recipe=recipe).order_by('-created_at')
         return context
 
-def home(request):
-    return render(request, 'recipes/recipes_home.html')
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        comment_text = request.POST.get('comment')
+        rating = request.POST.get('rating')
+
+        if comment_text and rating:
+            Comment.objects.create(
+                recipe=self.object,
+                user=request.user,
+                text=comment_text,
+                rating=int(rating)
+            )
+        return redirect('recipes:recipe_detail', pk=self.object.pk)
 
 def signup_view(request):
     if request.method == 'POST':
@@ -152,6 +173,45 @@ def add_recipe(request):
     else:
         form = RecipeForm()
     return render(request, 'recipes/add_recipe.html', {'form': form})
+
+@login_required
+def edit_recipe(request, pk):
+    recipe = get_object_or_404(Recipe, pk=pk)
+    if recipe.created_by != request.user:
+        return HttpResponseForbidden("You are not allowed to edit this recipe.")
+
+    if request.method == 'POST':
+        form = RecipeForm(request.POST, request.FILES, instance=recipe)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Recipe updated successfully!')
+            return redirect('recipes:recipe_detail', pk=recipe.pk)
+    else:
+        form = RecipeForm(instance=recipe)
+
+    return render(request, 'recipes/edit_recipe.html', {'form': form, 'recipe': recipe})
+
+@login_required
+def edit_comment(request, pk):
+    comment = get_object_or_404(Comment, pk=pk, user=request.user)
+
+    if request.method == 'POST':
+        form = CommentForm(request.POST, instance=comment)
+        if form.is_valid():
+            form.save()
+            return redirect('recipes:recipe_detail', pk=comment.recipe.pk)
+    else:
+        form = CommentForm(instance=comment)
+
+    return render(request, 'recipes/edit_comment.html', {'form': form, 'comment': comment})
+
+def delete_comment(request, comment_id):
+    print("DELETE VIEW CALLED") 
+    comment = get_object_or_404(Comment, id=comment_id, user=request.user)
+    recipe_id = comment.recipe.id
+    comment.delete()
+    messages.success(request, "Your comment was deleted.")
+    return redirect('recipes:recipe_detail', pk=recipe_id)
 
 def login_view(request):
     if request.user.is_authenticated:

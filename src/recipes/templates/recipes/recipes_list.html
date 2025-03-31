@@ -6,67 +6,6 @@
 {% block content %}
 <h1>All Recipes</h1>
 
-<style>
-    .recipe-container {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 20px;
-        padding: 20px;
-    }
-
-    .recipe-card {
-        background: white;
-        padding: 15px;
-        width: 270px;
-        border-radius: 12px;
-        box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.15);
-        text-align: center;
-        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-    }
-
-    .recipe-card:hover {
-        transform: scale(1.07);
-        box-shadow: 6px 6px 15px rgba(0, 0, 0, 0.2);
-    }
-
-    .recipe-card img {
-        width: 100%;
-        height: 160px;
-        object-fit: cover;
-        border-radius: 8px;
-    }
-
-    .recipe-card h3 {
-        font-size: 20px;
-        color: #333;
-        margin: 10px 0;
-    }
-
-    .recipe-card a {
-        display: inline-block;
-        padding: 12px 18px;
-        font-size: 16px;
-        font-weight: bold;
-        background-color: #ff9800;
-        color: white;
-        text-decoration: none;
-        border-radius: 5px;
-        margin-top: 10px;
-        transition: all 0.3s ease-in-out;
-    }
-
-    .recipe-card a:hover {
-        background-color: #e68900;
-        transform: scale(1.1);
-        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-    }
-
-    .search-container {
-        text-align: center;
-    }
-</style>
-
 <div class="recipe-container">
     {% for recipe in object_list %}
     <div class="recipe-card">
@@ -82,5 +21,4 @@
         <p>No recipes available.</p>
     {% endfor %}
 </div>
-
 {% endblock %}

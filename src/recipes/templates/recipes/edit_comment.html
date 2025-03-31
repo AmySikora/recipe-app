@@ -1,0 +1,39 @@
+{% extends 'recipes/base.html' %}
+{% load static %}
+
+{% block title %}Edit Comment{% endblock %}
+
+{% block content %}
+<div class="form-container">
+  <h2>✏️ Edit Your Comment</h2>
+
+  <!-- UPDATE FORM -->
+  <form method="POST">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="id_text">Comment:</label>
+      {{ form.text }}
+    </div>
+
+    <div class="form-group">
+      <label for="id_rating">Rating:</label>
+      {{ form.rating }}
+    </div>
+
+    <button type="submit" class="btn">Update</button>
+  </form>
+
+  <!-- DELETE FORM (must be separate) -->
+  <form method="POST" action="{% url 'recipes:delete_comment' comment.id %}" style="margin-top: 15px;">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger" style="background-color: tomato;" onclick="return confirm('Are you sure you want to delete this comment?')">
+      🗑️ Delete
+    </button>
+  </form>
+
+  <!-- BACK LINK -->
+  <div class="back-button" style="text-align: center; margin-top: 20px;">
+    <a href="{% url 'recipes:recipe_detail' comment.recipe.pk %}" class="btn">← Back to Recipe</a>
+  </div>
+</div>
+{% endblock %}

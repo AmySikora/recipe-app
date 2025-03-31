@@ -1,0 +1,35 @@
+{% extends 'recipes/base.html' %}
+{% load static %}
+
+{% block title %}Edit Recipe{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'recipes-style.css' %}">
+
+<div class="form-container">
+  <h2>✏️ Edit Recipe</h2>
+
+  <form method="POST" enctype="multipart/form-data" class="styled-form">
+    {% csrf_token %}
+    
+    {% for field in form %}
+      <div class="form-group">
+        {{ field.label_tag }}
+        {{ field }}
+        {% if field.help_text %}
+          <small style="color: #666;">{{ field.help_text }}</small>
+        {% endif %}
+        {% for error in field.errors %}
+          <p style="color: tomato;">{{ error }}</p>
+        {% endfor %}
+      </div>
+    {% endfor %}
+
+    <button type="submit" class="btn">💾 Update Recipe</button>
+  </form>
+
+  <div class="back-button" style="margin-top: 20px;">
+    <a href="{% url 'recipes:recipe_detail' recipe.pk %}" class="btn">← Back to Recipe</a>
+  </div>
+</div>
+{% endblock %}

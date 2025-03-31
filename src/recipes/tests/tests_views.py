@@ -2,6 +2,53 @@ from django.test import TestCase
 from django.urls import reverse
 from recipes.models import Recipe
 from django.contrib.auth.models import User
+from recipes.models import Comment
+
+class CommentViewTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='editor', password='testpass')
+        self.client.login(username='editor', password='testpass')
+        self.recipe = Recipe.objects.create(
+            name="Editable Dish",
+            cooking_time=20,
+            ingredients="stuff",
+            description="edit me",
+            instructions="try",
+            created_by=self.user
+        )
+        self.comment = Comment.objects.create(
+            recipe=self.recipe,
+            user=self.user,
+            text='Nice!',
+            rating=5
+        )
+
+    def test_edit_comment_view(self):
+        response = self.client.post(reverse('recipes:edit_comment', kwargs={'pk': self.comment.pk}),
+                                    {'text': 'Updated!', 'rating': 3})
+        self.comment.refresh_from_db()
+        self.assertEqual(self.comment.text, 'Updated!')
+
+    def test_delete_comment_view(self):
+        response = self.client.post(reverse('recipes:delete_comment', kwargs={'pk': self.comment.pk}))
+        self.assertEqual(Comment.objects.count(), 0)
+
+    def test_edit_recipe_view(self):
+        response = self.client.get(reverse('recipes:edit_recipe', kwargs={'pk': self.recipe.pk}))
+        self.assertEqual(response.status_code, 200)
+
+    def test_edit_recipe_submission(self):
+        response = self.client.post(reverse('recipes:edit_recipe', kwargs={'pk': self.recipe.pk}), {
+            'name': 'New Dish',
+            'cooking_time': 10,
+            'ingredients': 'updated',
+            'description': 'new description',
+            'instructions': 'new steps'
+        })
+        self.recipe.refresh_from_db()
+        self.assertEqual(self.recipe.name, 'New Dish')
+
+
 
 class RecipeViewsTest(TestCase):
     def setUp(self):

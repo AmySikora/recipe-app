@@ -4,101 +4,38 @@
 {% block title %}Add a New Recipe{% endblock %}
 
 {% block content %}
-<style>
-  .form-container {
-      max-width: 700px;
-      margin: 50px auto;
-      background-color: white;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1);
-      font-family: Arial, sans-serif;
-  }
 
-  h2 {
-      text-align: center;
-      color: #ff9800;
-      margin-bottom: 20px;
-  }
-
-  .form-group {
-      margin-bottom: 20px;
-      text-align: left;
-  }
-
-  label {
-      font-weight: bold;
-      display: block;
-      margin-bottom: 5px;
-  }
-
-  input, textarea, select {
-      width: 100%;
-      padding: 10px;
-      font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-  }
-
-  .btn {
-      width: 100%;
-      background-color: #ff9800;
-      color: white;
-      padding: 12px;
-      font-size: 18px;
-      font-weight: bold;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      margin-top: 10px;
-  }
-
-  .btn:hover {
-      background-color: #e68900;
-  }
-
-  .back-link {
-      display: block;
-      margin-top: 20px;
-      text-align: center;
-      font-size: 16px;
-  }
-
-  .back-link a {
-      color: #ff9800;
-      text-decoration: none;
-      font-weight: bold;
-  }
-
-  .back-link a:hover {
-      text-decoration: underline;
-  }
-</style>
 {% if messages %}
   {% for message in messages %}
-    <div style="background: #e0ffe0; border: 1px solid #00aa00; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
+    <div class="success-message">
       {{ message }}
     </div>
   {% endfor %}
 {% endif %}
 
 <div class="form-container">
-    <h2>🍽️ Add a New Recipe</h2>
+  <h2>🍽️ Add a New Recipe</h2>
 
-    <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        {% for field in form %}
-            <div class="form-group">
-                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                {{ field }}
-                {% if field.errors %}
-                    <div style="color: red; font-size: 14px;">{{ field.errors }}</div>
-                {% endif %}
-            </div>
-        {% endfor %}
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% for field in form %}
+      <div class="form-group">
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}
+          <div class="form-error">{{ field.errors }}</div>
+        {% endif %}
+      </div>
+    {% endfor %}
 
-        <button type="submit" class="btn">Submit Recipe</button>
-        <img id="preview" style="max-width: 300px; margin-top: 10px; display: none;" />
+    <button type="submit" class="btn">Submit Recipe</button>
+    <img id="preview" style="max-width: 300px; margin-top: 10px; display: none;" />
+  </form>
+
+  <div class="back-link">
+    <a href="{% url 'recipes:recipe_list' %}">← Back to Recipes</a>
+  </div>
+</div>
 
 <script>
   const fileInput = document.querySelector('input[type="file"]');
@@ -117,10 +54,4 @@
   });
 </script>
 
-    </form>
-
-    <div class="back-link">
-        <a href="{% url 'recipes:recipe_list' %}">← Back to Recipes</a>
-    </div>
-</div>
 {% endblock %}

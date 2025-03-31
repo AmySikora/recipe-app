@@ -1,111 +1,12 @@
 {% extends 'recipes/base.html' %}
-{% load static %}  
+{% load static %}
 
 {% block title %}Login | Recipe App{% endblock %}
 
 {% block content %}
-<style>
-    /* Full Page Styling */
-    body {
-        background-color: #f8f7f5;
-        text-align: center;
-    }
-
-    /* Centered Login Container */
-    .login-container {
-        max-width: 400px;
-        margin: auto;
-        background: white;
-        padding: 30px;
-        border-radius: 12px;
-        box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.1);
-        text-align: center;
-        margin-top: 50px;
-    }
-
-    /* Logo Styling */
-    .logo {
-        max-width: 80px;
-        margin-bottom: 10px;
-    }
-
-    /* Welcome Message */
-    .welcome-message {
-        font-size: 20px;
-        color: #ff9800;
-        font-weight: bold;
-        margin-bottom: 20px;
-    }
-
-    .form-group {
-        text-align: left;
-        margin-bottom: 15px;
-    }
-
-    label {
-        display: block;
-        font-size: 16px;
-        font-weight: bold;
-        margin-bottom: 5px;
-    }
-
-    input {
-        width: 100%;
-        padding: 10px;
-        font-size: 16px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-    }
-
-    /* Button Styling */
-    .btn {
-        display: inline-block;
-        padding: 12px 20px;
-        font-size: 18px;
-        background-color: #ff9800;
-        color: white;
-        text-decoration: none;
-        border-radius: 5px;
-        border: none;
-        cursor: pointer;
-        width: 100%;
-        margin-top: 10px;
-        font-weight: bold;
-    }
-
-    .btn:hover {
-        background-color: #e68900;
-    }
-
-    /* Error Message Styling */
-    .error-message {
-        color: red;
-        font-size: 14px;
-        margin-bottom: 10px;
-    }
-
-    /* Register Link */
-    .register-link {
-        margin-top: 15px;
-        font-size: 16px;
-    }
-
-    .register-link a {
-        color: #ff9800;
-        text-decoration: none;
-        font-weight: bold;
-    }
-
-    .register-link a:hover {
-        text-decoration: underline;
-    }
-</style>
-
 <div class="login-container">
-    <!-- Optional Logo (Replace with your actual logo) -->
     <img src="{% static 'recipes/images/logo.png' %}" alt="Recipe App Logo" class="logo">
 
-    <!-- Streamlined Welcome Message -->
     <p class="welcome-message">Login to start cooking!</p>
 
     {% if error_message %}

@@ -4,73 +4,23 @@
 {% block title %}About Me{% endblock %}
 
 {% block content %}
-<style>
-    .about-recipe {
-        max-width: 700px;
-        margin: 60px auto;
-        text-align: center;
-        font-family: 'Ubuntu', sans-serif;
-        color: #333;
-        padding: 0 20px;
-    }
-
-    .about-recipe img {
-        width: 150px;
-        height: auto;
-        border-radius: 50%;
-        margin-bottom: 20px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .about-recipe h1 {
-        font-size: 28px;
-        margin-bottom: 16px;
-    }
-
-    .about-recipe p {
-        font-size: 18px;
-        line-height: 1.6;
-        margin-bottom: 24px;
-    }
-
-    .link-buttons {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 16px;
-        margin-top: 20px;
-    }
-
-    .link-buttons a {
-        background-color: #ff9800;
-        color: white;
-        text-decoration: none;
-        padding: 12px 20px;
-        border-radius: 6px;
-        font-weight: 600;
-        transition: background-color 0.3s ease;
-    }
-
-    .link-buttons a:hover {
-        background-color: #e68900;
-    }
-</style>
-
 <div class="about-recipe">
-    <img src="{% static 'images/my-image.JPG' %}" alt="Portrait of Amy Sikora">
-    <h1>Hi, I'm Amy Sikora</h1>
-    <p>
-        I'm a web developer with a background in higher education and student services. I created this Recipe App as part of my full-stack journey to build user-friendly, dynamic applications using Django.
-    </p>
-    <p>
-        Want to see more of my work or connect? Check out the links below.
-    </p>
+  <img src="{% static 'images/my-image.JPG' %}" alt="Portrait of Amy Sikora">
+  <h1>Hi, I'm Amy Sikora</h1>
+  <p>
+    I'm a web developer with a background in higher education and student services.
+    I created this Recipe App as part of my full-stack journey to build user-friendly,
+    dynamic applications using Django.
+  </p>
+  <p>
+    Want to see more of my work or connect? Check out the links below.
+  </p>
 
-    <div class="link-buttons">
-        <a href="https://amysikora.github.io/portfolio-website/" target="_blank">🌐 Portfolio</a>
-        <a href="https://github.com/AmySikora" target="_blank">🐙 GitHub</a>
-        <a href="https://www.linkedin.com/in/amy-sikora-freelance/" target="_blank">🔗 LinkedIn</a>
-        <a href="mailto:amy.sikora77@gmail.com">✉️ Email Me</a>
-    </div>
+  <div class="link-buttons">
+    <a href="https://amysikora.github.io/portfolio-website/" target="_blank">🌐 Portfolio</a>
+    <a href="https://github.com/AmySikora" target="_blank">🐙 GitHub</a>
+    <a href="https://www.linkedin.com/in/amy-sikora-freelance/" target="_blank">🔗 LinkedIn</a>
+    <a href="mailto:amy.sikora77@gmail.com">✉️ Email Me</a>
+  </div>
 </div>
 {% endblock %}

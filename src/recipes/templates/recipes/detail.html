@@ -1,101 +1,18 @@
 {% extends 'recipes/base.html' %}
-{% load static %}  
+{% load static %}
 
 {% block title %}{{ object.name }} - Recipe Details{% endblock %}
 
 {% block content %}
-<style>
-    .container {
-        max-width: 700px;
-        margin: auto;
-        background: white;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.1);
-        text-align: center;
-    }
+<link rel="stylesheet" href="{% static 'recipes-style.css' %}">
 
-    h2 {
-        font-size: 28px;
-        color: #ff9800;
-        margin-bottom: 10px;
-    }
+<div class="recipe-detail-container">
+    <!-- Share Button (Top Right) -->
+    <div class="share-link" style="text-align: right;">
+        <button class="btn-small" onclick="copyLink()">🔗 Share</button>
+        <p id="copy-msg">Link copied!</p>
+      </div>
 
-    .image-container {
-        text-align: center;
-        margin-bottom: 20px;
-    }
-
-    img {
-        width: 100%;
-        max-width: 500px;
-        height: auto;
-        object-fit: cover;
-        border-radius: 10px;
-        box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.2);
-    }
-
-    .info {
-        font-size: 18px;
-        margin-bottom: 10px;
-        color: #333;
-        text-align: left;
-    }
-
-    .section, .instructions {
-        background: #fff3e0;
-        padding: 15px;
-        border-radius: 8px;
-        margin-top: 10px;
-        text-align: left;
-    }
-
-    .instructions {
-        background: #e0f7fa;
-    }
-
-    ul, ol {
-        margin: 10px 0;
-        padding-left: 20px;
-    }
-
-    ul li, ol li {
-        font-size: 16px;
-        line-height: 1.5;
-        margin-bottom: 5px;
-    }
-
-    .btn {
-        display: inline-block;
-        padding: 12px 24px;
-        font-size: 18px;
-        background-color: #ff9800;
-        color: white;
-        text-decoration: none;
-        border-radius: 5px;
-        margin-top: 20px;
-        transition: all 0.3s ease-in-out;
-    }
-
-    .btn:hover {
-        background-color: #e68900;
-        transform: scale(1.05);
-    }
-
-    .section ul li a {
-    text-decoration: none;
-    color: #ff9800;
-    font-weight: bold;
-}
-
-    .section ul li a:hover {
-        text-decoration: underline;
-        color: #e68900;
-}
-
-</style>
-
-<div class="container">
     <h2>🍽️ {{ object.name }}</h2>
 
     <div class="image-container">
@@ -105,6 +22,24 @@
             <p>No image available.</p>
         {% endif %}
     </div>
+
+    <!-- Average Rating -->
+    {% if average_rating %}
+    <div class="star-rating-display" style="text-align: center; margin-top: 10px;">
+        <p><strong>⭐ Average Rating:</strong> {{ average_rating|floatformat:1 }}/5</p>
+    </div>
+    {% endif %}
+
+    <!-- Submitted By -->
+    <p class="submitted-info" style="font-size: 14px; text-align: right; color: #666;">
+        Submitted by: {{ object.created_by.username|default:"Unknown" }} on {{ object.created_at|date:"F j, Y" }}
+    </p>
+
+    {% if object.created_by == user %}
+        <div style="text-align: right; margin-bottom: 20px;">
+            <a href="{% url 'recipes:edit_recipe' object.id %}" class="btn btn-sm">✏️ Edit Recipe</a>
+        </div>
+    {% endif %}
 
     <p class="info"><b>Description:</b> {{ object.description }}</p>
 
@@ -116,7 +51,7 @@
             {% endfor %}
         </ul>
     </div>
-    
+
     <div class="instructions">
         <b>Instructions:</b>
         <ol>
@@ -125,23 +60,80 @@
             {% endfor %}
         </ol>
     </div>
+
     {% if related_recipes %}
-    <div class="section" style="margin-top: 30px;">
-      <b>Pairs Well With:</b>
-      <ul>
-        {% for recipe in related_recipes %}
-          <li>
-            <a href="{% url 'recipes:recipe_detail' recipe.id %}">
-              {{ recipe.name }}
-            </a>
-          </li>
-        {% endfor %}
-      </ul>
-    </div>
+    <div class="section related-recipes">
+        <b>Pairs Well With:</b>
+        <ul>
+            {% for recipe in related_recipes %}
+  {% if recipe.id %}
+    <li><a href="{% url 'recipes:recipe_detail' recipe.id %}">{{ recipe.name }}</a></li>
+  {% else %}
+    <li>Related recipe not found</li>
   {% endif %}
-    
-    <div style="text-align: center;">
-        <a href="{% url 'recipes:recipe_list' %}" class="btn">Back to Recipes</a>
+{% endfor %}
+
+        </ul>
+    </div>
+    {% endif %}
+
+    <!-- Comments Section -->
+    <div class="comments-section">
+        <h3>💬 Comments & Ratings</h3>
+
+        {% if comments %}
+        <div class="comment-list">
+            {% for c in comments %}
+                <div class="comment-item">
+                    <strong>{{ c.user }}</strong> – {% for _ in "12345"|slice:":c.rating" %}★{% endfor %}
+                    <p>{{ c.text }}</p>
+                    {% if c.user == user %}
+                        <a href="{% url 'recipes:edit_comment' c.pk %}">✏️ Edit</a>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+        {% else %}
+            <p>No comments yet. Be the first!</p>
+        {% endif %}
+
+        <h4 style="margin-top: 30px;">Add a Comment</h4>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="comment-textarea">Comment:</label><br>
+                <textarea id="comment-textarea" name="comment" rows="3" style="width:100%; border-radius: 8px; padding: 10px;" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="star5">Rating:</label>
+                <div class="star-rating">
+                    {% for i in "54321" %}
+                        <input type="radio" id="star{{ i }}" name="rating" value="{{ i }}">
+                        <label for="star{{ i }}" title="{{ i }} stars">★</label>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <button type="submit" class="btn">Submit Comment</button>
+        </form>
+    </div>
+
+    <div class="back-button" style="margin-top: 30px;">
+        <a href="{% url 'recipes:recipe_list' %}" class="btn">← Back to Recipes</a>
     </div>
 </div>
+
+<script>
+    function copyLink() {
+        const dummy = document.createElement("input");
+        const text = window.location.href;
+        document.body.appendChild(dummy);
+        dummy.value = text;
+        dummy.select();
+        document.execCommand("copy");
+        document.body.removeChild(dummy);
+        document.getElementById("copy-msg").style.display = "block";
+    }
+</script>
 {% endblock %}
