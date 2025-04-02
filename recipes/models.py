@@ -31,7 +31,7 @@ class Recipe(models.Model):
     # Image field for recipe photo (stored in 'recipes/' folder)
     pic = models.ImageField(upload_to='recipes/', default='recipes/no_picture.png')
     # Step-by-step instructions
-    instructions = models.TextField(help_text="Step-by-step cooking instructions", default="No instructions provided.")
+    instructions = models.TextField(help_text="Step-by-step cooking instructions", blank=True, null=True)
     # Optional related recipes (e.g., side dishes, complementary meals)
     related_recipes = models.ManyToManyField('self', blank=True)
     # User who created the recipe (can be null if deleted)
