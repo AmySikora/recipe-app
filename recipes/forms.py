@@ -33,8 +33,20 @@ class RecipeForm(forms.ModelForm):
         model = Recipe
         fields = ['name', 'description', 'ingredients', 'instructions', 'cooking_time', 'pic']
         widgets = {
-            'instructions': forms.Textarea(attrs={'rows': 4}),
-            'ingredients': forms.Textarea(attrs={'rows': 3}),
+            'ingredients': forms.Textarea(attrs={
+                'placeholder': 'e.g., 2 eggs, 1 cup flour, 1 tsp vanilla'
+            }),
+            'instructions': forms.Textarea(attrs={
+                'placeholder': 'Step-by-step cooking instructions...'
+            }),
+            'cooking_time': forms.TextInput(attrs={
+                'placeholder': 'e.g., 20 minutes'
+            }),
+        }
+        help_texts = {
+            'ingredients': 'Separate each ingredient with a comma or put each on a new line.',
+            'instructions': 'Provide clear, step-by-step instructions for preparing the recipe.',
+            'cooking_time': 'Enter a duration like "30 minutes" or "1 hour".',
         }
 
 # Form for submitting a comment and rating on a recipe
