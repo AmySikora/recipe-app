@@ -164,6 +164,7 @@ def search_view(request):
     return render(request, 'recipes/search.html', context)
 
 # Add a new recipe
+@login_required(login_url='/login/')
 def add_recipe(request):
     if request.method == 'POST':
         form = RecipeForm(request.POST, request.FILES)
