@@ -144,7 +144,7 @@
   }
   
   .logo {
-    max-width: 80px;
+    max-width: 90px;
     margin-bottom: 15px;
   }
   
@@ -176,6 +176,7 @@
     width: 100%;
     font-weight: bold;
     margin-top: 10px;
+    text-align: center;
   }
   
   .btn:hover {
