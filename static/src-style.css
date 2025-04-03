@@ -226,6 +226,14 @@
     margin-bottom: 8px;
     color: #333;
   }
+
+  .register-link {
+    margin: 10px 0 0;
+    font-size: 14px;
+    color: #444;
+  }
+  
+
   
   /* ===========================
      SIGNUP PAGE STYLES
