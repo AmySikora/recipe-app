@@ -36,7 +36,7 @@ class RecipeDetailView(LoginRequiredMixin, DetailView):
         recipe = self.get_object()
         context['ingredients_list'] = recipe.ingredients.split(", ")
         context['instructions_list'] = recipe.instructions.split("\n")
-        context['related_recipes'] = recipe.related_recipes.all(),
+        context['related_recipes'] = recipe.related_recipes.all()
         context['average_rating'] = recipe.comments.aggregate(avg_rating=Avg('rating'))['avg_rating']
         context['comments'] = Comment.objects.filter(recipe=recipe).order_by('-created_at')
         return context
