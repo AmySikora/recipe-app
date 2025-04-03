@@ -226,26 +226,6 @@
     color: #333;
   }
   
-  .btn-signup {
-    background-color: white;
-    color: #ff9800;
-    font-size: 16px;
-    font-weight: bold;
-    padding: 10px 20px;
-    border: 2px solid #ff9800;
-    border-radius: 6px;
-    cursor: pointer;
-    text-decoration: none;
-    display: inline-block;
-    transition: all 0.3s ease;
-  }
-  
-  .btn-signup:hover {
-    background-color: #ff9800;
-    color: white;
-    transform: scale(1.05);
-  }
-  
   /* ===========================
      SIGNUP PAGE STYLES
      =========================== */
