@@ -5,30 +5,31 @@
 
 {% block content %}
 <div class="login-container">
-    <img src="{% static 'recipes/images/logo.png' %}" alt="Recipe App Logo" class="logo">
+  <img src="{% static 'recipes/images/logo.png' %}" alt="Recipe App Logo" class="logo">
+  <p class="welcome-message">Login to start cooking!</p>
 
-    <p class="welcome-message">Login to start cooking!</p>
+  {% if error_message %}
+    <p class="error-message">{{ error_message }}</p>
+  {% endif %}
 
-    {% if error_message %}
-        <p class="error-message">{{ error_message }}</p>
-    {% endif %}
-
-    <form action="" method="POST">
-        {% csrf_token %}
-        <div class="form-group">
-            <label for="id_username">Username:</label>
-            {{ form.username }}
-        </div>
-        <div class="form-group">
-            <label for="id_password">Password:</label>
-            {{ form.password }}
-        </div>
-        <button type="submit" class="btn">Login</button>
-    </form>
-
-    <div class="register-section">
-        <p class="register-link">Don't have an account?</p>
-        <a href="{% url 'signup' %}" class="btn">Sign Up</a>
+  <form action="" method="POST" class="login-form">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="id_username">Username:</label>
+      {{ form.username }}
     </div>
+
+    <div class="form-group">
+      <label for="id_password">Password:</label>
+      {{ form.password }}
+    </div>
+
+    <button type="submit" class="btn full-width">Login</button>
+  </form>
+
+  <div class="register-section">
+    <p class="register-link">Don't have an account?</p>
+    <a href="{% url 'signup' %}" class="btn full-width">Sign Up</a>
+  </div>
 </div>
 {% endblock %}
