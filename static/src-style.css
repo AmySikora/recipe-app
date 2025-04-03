@@ -205,6 +205,18 @@
     text-align: center;
   }
   
+  .login-container form,
+  .register-section {
+    max-width: 300px;
+    margin: 0 auto;
+  }
+
+  .login-container .form-group input,
+  .login-container .btn.full-width {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
   .welcome-message {
     font-size: 20px;
     color: #ff9800;
