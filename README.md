@@ -52,7 +52,7 @@ aw2recipe-app-images
 Your media URLs are served directly via:
 
 ```
-https://aw2recipe-app-images.s3.amazonaws.com/recipes/<image-filename>
+https://aw2recipe-app-images.s3.amazonaws.com/recipes/
 ```
 
 Configuration added to `settings.py`:
@@ -76,7 +76,7 @@ MEDIA_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/"
 ## 🚀 Deployment
 
 - Hosted on Heroku at:  
-  [https://recipe-app77.herokuapp.com](https://recipe-app77.herokuapp.com)
+  [https://recipe-app77.herokuapp.com]
 
 Heroku environment includes:
 
@@ -120,6 +120,24 @@ Heroku environment includes:
    ```
 
 ---
+---
+
+## 🔒 Authentication
+
+- Users can register, log in, and log out.
+- Only authenticated users can create or comment on recipes.
+- Only the user who created a recipe can edit it.
+
+---
+
+## 🧪 Test Credentials
+
+To test the application without creating a new user, use the following login:
+
+- **Username:** testuser  
+- **Password:** TestPass123
+
+> If the test account is not available, please use the signup page to register a new account.
 
 ## 🔍 Search & Charts
 
