@@ -29,8 +29,9 @@
         <button type="submit" class="btn">Login</button>
     </form>
 
-    <p class="register-link">
-        <a href="{% url 'signup' %}">Sign up here</a>
-    </p>
-</div>
+    <div class="register-section">
+        <p class="register-text">Don't have an account?</p>
+        <a href="{% url 'signup' %}" class="btn btn-signup">Sign Up</a>
+    </div>
+    
 {% endblock %}
