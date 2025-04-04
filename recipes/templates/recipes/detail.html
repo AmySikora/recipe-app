@@ -11,7 +11,7 @@
     <div class="share-link" style="text-align: right;">
         <button class="btn-small" onclick="copyLink()">🔗 Share</button>
         <p id="copy-msg">Link copied!</p>
-      </div>
+    </div>
 
     <h2>🍽️ {{ object.name }}</h2>
 
@@ -66,16 +66,28 @@
         <b>Pairs Well With:</b>
         <ul>
             {% for recipe in related_recipes %}
-  {% if recipe.id %}
-    <li><a href="{% url 'recipes:recipe_detail' recipe.id %}">{{ recipe.name }}</a></li>
-  {% else %}
-    <li>Related recipe not found</li>
-  {% endif %}
-{% endfor %}
-
+                {% if recipe.id %}
+                    <li><a href="{% url 'recipes:recipe_detail' recipe.id %}">{{ recipe.name }}</a></li>
+                {% else %}
+                    <li>Related recipe not found</li>
+                {% endif %}
+            {% endfor %}
         </ul>
     </div>
     {% endif %}
+
+    <!-- Heart Button: Toggle Favorite Status -->
+    <form method="POST" style="display:inline;">
+        {% csrf_token %}
+        <input type="hidden" name="heart_action" value="{% if is_hearted %}unheart{% else %}heart{% endif %}">
+        <button type="submit" class="btn-small">
+            {% if is_hearted %}
+                💖 Remove from Favorites
+            {% else %}
+                🤍 Add to Favorites
+            {% endif %}
+        </button>
+    </form>
 
     <!-- Comments Section -->
     <div class="comments-section">
