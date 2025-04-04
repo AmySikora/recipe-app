@@ -38,6 +38,8 @@ class Recipe(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     # Timestamp when recipe was created
     created_at = models.DateTimeField(auto_now_add=True)
+    # Add ManyToMany relationship to the User model to track saved recipes
+    favorited_by = models.ManyToManyField(User, related_name='saved_recipes', blank=True)
 
     # Automatically calculate difficulty based on ingredients and cooking time
     @property
