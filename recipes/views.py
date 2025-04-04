@@ -39,6 +39,7 @@ class RecipeDetailView(LoginRequiredMixin, DetailView):
         context['related_recipes'] = recipe.related_recipes.all()
         context['average_rating'] = recipe.comments.aggregate(avg_rating=Avg('rating'))['avg_rating']
         context['comments'] = Comment.objects.filter(recipe=recipe).order_by('-created_at')
+        context['is_hearted'] = recipe in self.request.user.saved_recipes.all()
         return context
 
     # Handle comment form submission
@@ -54,6 +55,14 @@ class RecipeDetailView(LoginRequiredMixin, DetailView):
                 text=comment_text,
                 rating=int(rating)
             )
+
+        # Handle heart/unheart submission
+        heart_action = request.POST.get('heart_action')
+        if heart_action == 'heart':
+            request.user.saved_recipes.add(self.object)
+        elif heart_action == 'unheart':
+            request.user.saved_recipes.remove(self.object)
+
         return redirect('recipes:recipe_detail', pk=self.object.pk)
 
 # User signup view
